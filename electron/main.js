@@ -1,5 +1,5 @@
 const electron = require('electron')
-// require('../src/message-control/main')
+require('./message-control/main')
 
 const { app } = electron
 const { BrowserWindow } = electron

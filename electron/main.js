@@ -20,6 +20,8 @@ function createWindow() {
     }
   })
   mainWindow.loadURL(
+    // I copy pasta-d this line from a React example, need to make sure the production build file is actually
+    // the same with Vue
     isDev ? 'http://localhost:5173' : `file://${path.join(__dirname, '../build/index.html')}`
   )
   mainWindow.on('closed', () => {

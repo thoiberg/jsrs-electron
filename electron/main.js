@@ -1,11 +1,15 @@
 const electron = require('electron')
-require('./message-control/main')
+
+const { PrismaClient } = require('@prisma/client')
+
+const prisma = new PrismaClient()
 
 const { app } = electron
 const { BrowserWindow } = electron
 
 const path = require('path')
 const isDev = require('electron-is-dev')
+const { ipcMain } = require('electron')
 
 let mainWindow
 
@@ -16,7 +20,8 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: true,
       enableRemoteModule: true,
-      contextIsolation: false
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js')
     }
   })
   mainWindow.loadURL(
@@ -26,6 +31,16 @@ function createWindow() {
   )
   mainWindow.on('closed', () => {
     mainWindow = null
+  })
+
+  ipcMain.handle('get-all-test', async () => {
+    try {
+      const data = await prisma.test.findMany()
+
+      return data
+    } catch (e) {
+      return e
+    }
   })
 }
 

@@ -1,6 +1,4 @@
 <script>
-import sendAsync from '../../electron/message-control/renderer.js'
-
 export default {
   data: function () {
     return {
@@ -9,14 +7,7 @@ export default {
     }
   },
   async mounted() {
-    console.log("I'm a mountin'")
-    const sql = 'SELECT * FROM test;'
-
-    sendAsync(sql)
-      .then((result) => {
-        this.testData = result
-      })
-      .catch((err) => (this.errorMsg = err))
+    this.testData = await window.electronAPI.getAllTest()
   }
 }
 </script>

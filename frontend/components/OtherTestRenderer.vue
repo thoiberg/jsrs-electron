@@ -1,6 +1,4 @@
 <script>
-import sendAsync from '../../electron/message-control/renderer.js'
-
 export default {
   data: function () {
     return {
@@ -9,13 +7,12 @@ export default {
     }
   },
   async mounted() {
-    const sql = 'SELECT * FROM other_test;'
-
-    sendAsync(sql)
-      .then((result) => {
-        this.testData = result
-      })
-      .catch((err) => (this.errorMsg = err))
+    // const sql = 'SELECT * FROM other_test;'
+    // sendAsync(sql)
+    //   .then((result) => {
+    //     this.testData = result
+    //   })
+    //   .catch((err) => (this.errorMsg = err))
   }
 }
 </script>

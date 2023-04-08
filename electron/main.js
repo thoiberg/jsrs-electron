@@ -8,7 +8,6 @@ const { app } = electron
 const { BrowserWindow } = electron
 
 const path = require('path')
-const isDev = require('electron-is-dev')
 const { ipcMain } = require('electron')
 
 let mainWindow
@@ -24,11 +23,16 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.js')
     }
   })
-  mainWindow.loadURL(
-    // I copy pasta-d this line from a React example, need to make sure the production build file is actually
-    // the same with Vue
-    isDev ? 'http://localhost:5173' : `file://${path.join(__dirname, '../build/index.html')}`
-  )
+  // and load the index.html of the app.
+  if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
+    mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL)
+  } else {
+    mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`))
+  }
+
+  // Open the DevTools.
+  mainWindow.webContents.openDevTools()
+
   mainWindow.on('closed', () => {
     mainWindow = null
   })

@@ -8,7 +8,6 @@ const { app } = electron
 const { BrowserWindow } = electron
 
 const path = require('path')
-const isDev = require('electron-is-dev')
 const { ipcMain } = require('electron')
 
 let mainWindow
@@ -33,7 +32,6 @@ function createWindow() {
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools()
-  // mainWindow.loadFile('dist/index.html')
 
   mainWindow.on('closed', () => {
     mainWindow = null

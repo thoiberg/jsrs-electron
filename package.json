@@ -5,8 +5,6 @@
   "main": ".vite/build/main.js",
   "scripts": {
     "dev": "vite",
-    "electron-dev": "concurrently \"npm run dev\" \"npm run electron\"",
-    "electron": "electron .",
     "build": "run-p type-check build-only",
     "preview": "vite preview",
     "test:unit": "vitest",

@@ -77,6 +77,7 @@ app.on('activate', () => {
   }
 })
 
+// TODO: Only run the migrations when there are un-applied migrations waiting
 function setupDb() {
   log.info(`db path: ${dbPath}`)
   const dbExists = fs.existsSync(dbPath)

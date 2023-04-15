@@ -1,7 +1,7 @@
 module.exports = {
   packagerConfig: {
     extraResource: ['node_modules/@prisma'],
-    ignore: ['.env']
+    ignore: ['.env', 'dev.db']
   },
   rebuildConfig: {},
   makers: [

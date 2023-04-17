@@ -1,7 +1,7 @@
 module.exports = {
   packagerConfig: {
     extraResource: ['node_modules/@prisma'],
-    ignore: ['.env']
+    ignore: ['.env', 'dev.db']
   },
   rebuildConfig: {},
   makers: [
@@ -31,11 +31,11 @@ module.exports = {
         build: [
           {
             // `entry` is just an alias for `build.lib.entry` in the corresponding file of `config`.
-            entry: 'electron/main.js',
+            entry: 'electron/main.ts',
             config: 'vite.main.config.mjs'
           },
           {
-            entry: 'electron/preload.js',
+            entry: 'electron/preload.ts',
             config: 'vite.preload.config.mjs'
           }
         ],

@@ -27,6 +27,9 @@ coverage
 *.sln
 *.sw?
 
-public/*.db
+# dev SQLite db file
+dev.db
+
+# electron forge output
 out/
 .vite/

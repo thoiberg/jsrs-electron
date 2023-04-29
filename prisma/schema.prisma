@@ -7,14 +7,54 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model other_test {
-  id      Int     @id @default(autoincrement())
-  name    String?
-  message String?
+model Card {
+  id               Int               @id @default(autoincrement())
+  uuid             String            @unique
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  japaneseCardSide JapaneseCardSide?
+  englishCardSide  EnglishCardSide?
 }
 
-model test {
-  id      Int     @id @default(autoincrement())
-  name    String?
-  message String?
+model JapaneseCardSide {
+  id             Int              @id @default(autoincrement())
+  uuid           String           @unique
+  nextReviewAt   DateTime
+  card           Card             @relation(fields: [cardId], references: [id])
+  cardId         Int              @unique
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  japaneseAnswer JapaneseAnswer[]
+}
+
+model JapaneseAnswer {
+  id                 Int              @id @default(autoincrement())
+  uuid               String           @unique
+  kanji              String?
+  kana               String?
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  japaneseCardSide   JapaneseCardSide @relation(fields: [japaneseCardSideId], references: [id])
+  japaneseCardSideId Int              @unique
+}
+
+model EnglishCardSide {
+  id            Int             @id @default(autoincrement())
+  uuid          String          @unique
+  nextReviewAt  DateTime
+  card          Card            @relation(fields: [cardId], references: [id])
+  cardId        Int             @unique
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  englishAnswer EnglishAnswer[]
+}
+
+model EnglishAnswer {
+  id                Int             @id @default(autoincrement())
+  uuid              String          @unique
+  answer            String
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  englishCardSide   EnglishCardSide @relation(fields: [englishCardSideId], references: [id])
+  englishCardSideId Int             @unique
 }

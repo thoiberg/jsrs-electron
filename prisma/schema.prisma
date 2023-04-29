@@ -8,8 +8,7 @@ datasource db {
 }
 
 model Card {
-  id               Int               @id @default(autoincrement())
-  uuid             String            @unique
+  id               String            @id @default(uuid())
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
   japaneseCardSide JapaneseCardSide?
@@ -17,44 +16,40 @@ model Card {
 }
 
 model JapaneseCardSide {
-  id             Int              @id @default(autoincrement())
-  uuid           String           @unique
+  id             String           @id @default(uuid())
   nextReviewAt   DateTime
   card           Card             @relation(fields: [cardId], references: [id])
-  cardId         Int              @unique
+  cardId         String           @unique
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
   japaneseAnswer JapaneseAnswer[]
 }
 
 model JapaneseAnswer {
-  id                 Int              @id @default(autoincrement())
-  uuid               String           @unique
+  id                 String           @id @default(uuid())
   kanji              String?
   kana               String?
   createdAt          DateTime         @default(now())
   updatedAt          DateTime         @updatedAt
   japaneseCardSide   JapaneseCardSide @relation(fields: [japaneseCardSideId], references: [id])
-  japaneseCardSideId Int              @unique
+  japaneseCardSideId String           @unique
 }
 
 model EnglishCardSide {
-  id            Int             @id @default(autoincrement())
-  uuid          String          @unique
+  id            String          @id @default(uuid())
   nextReviewAt  DateTime
   card          Card            @relation(fields: [cardId], references: [id])
-  cardId        Int             @unique
+  cardId        String          @unique
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
   englishAnswer EnglishAnswer[]
 }
 
 model EnglishAnswer {
-  id                Int             @id @default(autoincrement())
-  uuid              String          @unique
+  id                String          @id @default(uuid())
   answer            String
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
   englishCardSide   EnglishCardSide @relation(fields: [englishCardSideId], references: [id])
-  englishCardSideId Int             @unique
+  englishCardSideId String          @unique
 }

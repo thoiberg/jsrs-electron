@@ -1,13 +1,9 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
-import TestSqlRenderer from './components/TestSqlRenderer.vue'
-import OtherTestRenderer from './components/OtherTestRenderer.vue'
 </script>
 
 <template>
-  <TestSqlRenderer />
-  <OtherTestRenderer />
   <header>
     <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
 

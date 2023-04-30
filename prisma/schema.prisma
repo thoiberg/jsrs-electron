@@ -22,7 +22,7 @@ model JapaneseCardSide {
   cardId         String           @unique
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
-  japaneseAnswer JapaneseAnswer[]
+  japaneseAnswers JapaneseAnswer[]
 }
 
 model JapaneseAnswer {
@@ -42,7 +42,7 @@ model EnglishCardSide {
   cardId        String          @unique
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
-  englishAnswer EnglishAnswer[]
+  englishAnswers EnglishAnswer[]
 }
 
 model EnglishAnswer {

@@ -10,6 +10,5 @@ export interface RPCSuccessResponse {
 
 export interface RPCErrorResponse {
   error: Error
-  name?: string
 }
 export type RPCResponse = RPCSuccessResponse | RPCErrorResponse

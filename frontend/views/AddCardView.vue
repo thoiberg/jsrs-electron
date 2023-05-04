@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="error-message" v-show="errorMessage">{{ errorMessage }}</div>
-    <form @submit="onSubmit">
+    <form @submit="onSubmit" id="my-form">
       <div class="field">
         <label>English</label>
         <input name="englishAnswer" type="text" v-model="english" />
@@ -38,6 +38,7 @@ async function onSubmit(event: Event) {
   event.preventDefault()
 
   //   TODO: validate the inputs
+  //    english should be mandatory, and either kana OR kanji should be mandatory
 
   const response = await window.electronAPI.createCard({
     english: english.value,
@@ -55,6 +56,10 @@ async function onSubmit(event: Event) {
   setTimeout(() => {
     showSuccessMessage.value = false
   }, 2000)
+
+  english.value = ''
+  kanji.value = ''
+  kana.value = ''
 }
 </script>
 

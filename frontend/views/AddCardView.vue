@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <div class="error-message" v-show="errorMessage">{{ errorMessage }}</div>
     <form @submit="onSubmit">
       <div class="field">
         <label>English</label>
@@ -30,6 +31,7 @@ import { ref } from 'vue'
 const english = ref('')
 const kana = ref('')
 const kanji = ref('')
+const errorMessage = ref('')
 let showSuccessMessage = ref(false)
 
 async function onSubmit(event: Event) {
@@ -44,7 +46,7 @@ async function onSubmit(event: Event) {
   })
 
   if ('error' in response) {
-    // display an error message and quit
+    errorMessage.value = response.error.message
     return
   }
 
@@ -60,7 +62,12 @@ async function onSubmit(event: Event) {
 .container {
   margin-top: 30px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.error-message {
+  margin-bottom: 25px;
 }
 
 form {

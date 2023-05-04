@@ -1,15 +1,24 @@
 <template>
-  <form @submit="onSubmit">
-    <label for="englishAnswer">English</label>
-    <input name="englishAnswer" type="text" v-model="english" />
+  <div class="container">
+    <form @submit="onSubmit">
+      <div class="field">
+        <label>English</label>
+        <input name="englishAnswer" type="text" v-model="english" />
+      </div>
 
-    <label for="japaneseKanaAnswer">Kana</label>
-    <input name="japaneseKanaAnswer" type="text" v-model="kana" />
+      <div class="field">
+        <label for="japaneseKanaAnswer">Kana</label>
+        <input name="japaneseKanaAnswer" type="text" v-model="kana" />
+      </div>
 
-    <label for="japaneseKanjiAnswer">Kanji</label>
-    <input name="japaneseKanjiAnswer" type="text" v-model="kanji" />
-    <button type="submit"></button>
-  </form>
+      <div class="field">
+        <label for="japaneseKanjiAnswer">Kanji</label>
+        <input name="japaneseKanjiAnswer" type="text" v-model="kanji" />
+      </div>
+
+      <button type="submit">Add Card</button>
+    </form>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -37,3 +46,32 @@ async function onSubmit(event: Event) {
   // reset the fields
 }
 </script>
+
+<style>
+.container {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+form {
+  width: 60%;
+}
+
+form > button[type='submit'] {
+  margin-top: 40px;
+}
+
+.field > input {
+  width: 75%;
+}
+
+.field {
+  display: flex;
+  justify-content: space-between;
+}
+
+.field:not(:last-of-type) {
+  margin-bottom: 30px;
+}
+</style>

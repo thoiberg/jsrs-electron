@@ -2,7 +2,7 @@ import electron, { app, ipcMain } from 'electron'
 import process from 'process'
 import path from 'path'
 
-import { setupDb } from './prisma'
+import { setupDb } from '../prisma/prisma'
 import { createCard } from '../prisma/queries'
 
 // Taken from the docs: https://www.electronforge.io/config/plugins/vite#hot-module-replacement-hmr

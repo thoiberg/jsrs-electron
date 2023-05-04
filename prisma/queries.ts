@@ -1,4 +1,4 @@
-import { prisma } from '../electron/prisma'
+import { prisma } from './prisma'
 import type { CreateCardRequest, RPCResponse } from '../electron/types'
 import type { Event } from 'electron'
 

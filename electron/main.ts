@@ -15,8 +15,8 @@ function createWindow() {
   setupDb()
 
   const mainWindow = new BrowserWindow({
-    width: 900,
-    height: 680,
+    width: 1641,
+    height: 932,
     webPreferences: {
       nodeIntegration: true,
       // enableRemoteModule: true,

@@ -1,5 +1,13 @@
 /// <reference types="vite/client" />
 
-// Taken from the docs: https://www.electronforge.io/config/plugins/vite#hot-module-replacement-hmr
-declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string
-declare const MAIN_WINDOW_VITE_NAME: string
+import type { CreateCardRequest, RPCResponse } from 'electron/types'
+
+export declare global {
+  interface Window {
+    electronAPI: electronAPI
+  }
+}
+
+interface electronAPI {
+  createCard: (params: CreateCardRequest) => RPCResponse
+}

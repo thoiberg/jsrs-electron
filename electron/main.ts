@@ -3,6 +3,11 @@ import process from 'process'
 import path from 'path'
 
 import { setupDb, prisma } from './prisma'
+import type { CreateCardRequest, RPCResponse } from './types'
+
+// Taken from the docs: https://www.electronforge.io/config/plugins/vite#hot-module-replacement-hmr
+declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string
+declare const MAIN_WINDOW_VITE_NAME: string
 
 const { BrowserWindow } = electron
 
@@ -22,6 +27,7 @@ function createWindow() {
   // and load the index.html of the app.
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
     mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL)
+    // TODO: Set the dev server flag in the electron api
   } else {
     mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`))
   }
@@ -32,16 +38,50 @@ function createWindow() {
   // mainWindow.on('closed', () => {
   //   mainWindow = null
   // })
+  ipcMain.handle(
+    'create-card',
+    async (event, { english, kana, kanji }: CreateCardRequest): Promise<RPCResponse> => {
+      try {
+        const card = await prisma.card.create({
+          data: {
+            japaneseCardSide: {
+              create: {
+                japaneseAnswers: {
+                  create: {
+                    kana,
+                    kanji
+                  }
+                }
+              }
+            },
+            englishCardSide: {
+              create: {
+                englishAnswers: {
+                  create: {
+                    answer: english
+                  }
+                }
+              }
+            }
+          }
+        })
 
-  ipcMain.handle('get-all-test', async () => {
-    try {
-      const data = await prisma.test.findMany()
+        return { data: card }
+      } catch (e) {
+        let error
+        if (e instanceof Error) {
+          error = e
+        } else if (Object.prototype.hasOwnProperty.call(e, 'message')) {
+          const boop = e as { message: string }
+          error = Error(boop.message)
+        } else {
+          error = Error('something went wrong')
+        }
 
-      return data
-    } catch (e) {
-      return e
+        return { error }
+      }
     }
-  })
+  )
 }
 
 app.whenReady().then(() => {

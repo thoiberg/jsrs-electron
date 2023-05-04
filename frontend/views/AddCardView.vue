@@ -16,7 +16,10 @@
         <input name="japaneseKanjiAnswer" type="text" v-model="kanji" />
       </div>
 
-      <button type="submit">Add Card</button>
+      <div class="bottom-bar">
+        <button type="submit">Add Card</button>
+        <span v-show="showSuccessMessage">Card Created!</span>
+      </div>
     </form>
   </div>
 </template>
@@ -27,9 +30,12 @@ import { ref } from 'vue'
 const english = ref('')
 const kana = ref('')
 const kanji = ref('')
+let showSuccessMessage = ref(false)
 
 async function onSubmit(event: Event) {
   event.preventDefault()
+
+  //   TODO: validate the inputs
 
   const response = await window.electronAPI.createCard({
     english: english.value,
@@ -42,8 +48,11 @@ async function onSubmit(event: Event) {
     return
   }
 
-  // display a "card created!" notice
-  // reset the fields
+  showSuccessMessage.value = true
+
+  setTimeout(() => {
+    showSuccessMessage.value = false
+  }, 2000)
 }
 </script>
 
@@ -58,7 +67,7 @@ form {
   width: 60%;
 }
 
-form > button[type='submit'] {
+.bottom-bar {
   margin-top: 40px;
 }
 
@@ -73,5 +82,11 @@ form > button[type='submit'] {
 
 .field:not(:last-of-type) {
   margin-bottom: 30px;
+}
+
+.bottom-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 </style>

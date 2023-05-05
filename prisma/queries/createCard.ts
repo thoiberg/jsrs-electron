@@ -1,8 +1,8 @@
-import { prisma } from './prisma'
-import type { CreateCardRequest, RPCResponse } from '../electron/types'
+import { prisma } from '../prisma'
+import type { CreateCardRequest, RPCResponse } from '../../electron/types'
 import type { Event } from 'electron'
 
-export async function createCard(
+export default async function createCard(
   event: Event,
   { english, kana, kanji }: CreateCardRequest
 ): Promise<RPCResponse> {

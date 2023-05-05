@@ -1,8 +1,8 @@
 <template>
   <div class="container">
     <div class="error-message" v-show="errorMessage">{{ errorMessage }}</div>
-    <ul v-for="error in errors" :key="error">
-      <li>{{ error }}</li>
+    <ul>
+      <li v-for="error in errors" :key="error">{{ error }}</li>
     </ul>
     <form @submit="onSubmit" id="my-form">
       <div class="field">

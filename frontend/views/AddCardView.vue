@@ -4,7 +4,7 @@
     <ul>
       <li v-for="error in errors" :key="error">{{ error }}</li>
     </ul>
-    <form @submit="onSubmit" id="my-form">
+    <form @submit.prevent="onSubmit" id="my-form">
       <div class="field">
         <label>English</label>
         <input name="englishAnswer" type="text" v-model="english" />
@@ -50,15 +50,13 @@ function isValid(): boolean {
     (kana.value == null || kana.value.length == 0) &&
     (kanji.value == null || kanji.value.length == 0)
   ) {
-    errors.value.push('Kana or Kanji must be supplied')
+    errors.value.push('Kana or Kanji answer must be supplied')
   }
 
   return errors.value.length > 0 ? false : true
 }
 
-async function onSubmit(event: Event) {
-  event.preventDefault()
-
+async function onSubmit() {
   if (!isValid()) {
     return
   }

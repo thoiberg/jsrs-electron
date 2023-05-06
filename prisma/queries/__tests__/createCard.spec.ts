@@ -1,6 +1,9 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { prisma } from '../../prisma'
 import createCard from '../createCard'
+import type { Event } from 'electron'
+import type { RPCErrorResponse, RPCSuccessResponse } from 'electron/types'
+import type { Card } from '@prisma/client'
 
 describe('createCardQuery', () => {
   beforeEach(async () => {
@@ -23,7 +26,7 @@ describe('createCardQuery', () => {
   })
 
   it('creates a card in the db', async () => {
-    await createCard({}, { english: 'cat', kana: 'ねこ', kanji: '猫' })
+    await createCard({} as Event, { english: 'cat', kana: 'ねこ', kanji: '猫' })
 
     const cards = await prisma.card.findMany({
       include: {
@@ -53,19 +56,30 @@ describe('createCardQuery', () => {
 
   describe('when the request succeeds', () => {
     it('returns the card', async () => {
-      const response = await createCard({}, { english: 'cat', kana: 'ねこ', kanji: '猫' })
+      const response = await createCard({} as Event, {
+        english: 'cat',
+        kana: 'ねこ',
+        kanji: '猫'
+      })
+      const data = (response as RPCSuccessResponse).data
       const cards = await prisma.card.findMany()
 
-      expect(response.data.id).toEqual(cards[0].id)
+      expect((data as Card).id).toEqual(cards[0].id)
     })
   })
 
   describe('when the request fails', () => {
     it('returns as error', async () => {
-      const response = await createCard({}, { english: undefined, kana: 'ねこ', kanji: '猫' })
+      const response = await createCard({} as Event, {
+        english: undefined,
+        kana: 'ねこ',
+        kanji: '猫'
+      })
 
-      expect(response.error).toBeInstanceOf(Error)
-      expect(response.error.message).toContain(
+      const error = (response as RPCErrorResponse).error
+
+      expect(error).toBeInstanceOf(Error)
+      expect(error.message).toContain(
         'Argument answer for data.englishCardSide.create.englishAnswers.create.answer is missing.'
       )
     })

@@ -1,7 +1,7 @@
 export interface CreateCardRequest {
-  english: String
-  kanji: String
-  kana: String
+  english: string
+  kanji: string
+  kana: string
 }
 
 export interface RPCSuccessResponse {

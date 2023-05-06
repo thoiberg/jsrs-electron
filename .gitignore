@@ -29,6 +29,9 @@ coverage
 
 # dev SQLite db file
 dev.db
+# test SQLite db file
+test.db
+
 *.db-journal
 
 # electron forge output

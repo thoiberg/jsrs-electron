@@ -2,14 +2,18 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import AddCardView from '../AddCardView.vue'
 import { flushPromises } from '@vue/test-utils'
-import { mockDeep } from 'vitest-mock-extended'
+import { mockDeep, type DeepMockProxy } from 'vitest-mock-extended'
 import type { electronAPI } from 'env'
 
 describe('AddCardView', () => {
-  const electronAPI = mockDeep<electronAPI>()
+  interface LocalTestContext {
+    electronApi: DeepMockProxy<electronAPI>
+  }
 
-  beforeEach(() => {
-    vi.stubGlobal('electronAPI', electronAPI)
+  beforeEach<LocalTestContext>((context) => {
+    const electronApi = mockDeep<electronAPI>()
+    context.electronApi = electronApi
+    vi.stubGlobal('electronAPI', electronApi)
   })
 
   describe('when the english answer is missing', () => {
@@ -21,10 +25,10 @@ describe('AddCardView', () => {
       expect(wrapper.get('ul').text()).toContain('English answer must be supplied')
     })
 
-    it('does not attempt to create the card', async () => {
+    it<LocalTestContext>('does not attempt to create the card', async ({ electronApi }) => {
       const wrapper = mount(AddCardView)
       const createCardSpy = vi.fn()
-      electronAPI.createCard.mockImplementation(createCardSpy)
+      electronApi.createCard.mockImplementation(createCardSpy)
 
       await wrapper.get('form').trigger('submit.prevent')
 
@@ -41,10 +45,10 @@ describe('AddCardView', () => {
       expect(wrapper.get('ul').text()).toContain('Kana or Kanji answer must be supplied')
     })
 
-    it('does not attempt to create the card', async () => {
+    it<LocalTestContext>('does not attempt to create the card', async ({ electronApi }) => {
       const wrapper = mount(AddCardView)
       const createCardSpy = vi.fn()
-      electronAPI.createCard.mockImplementation(createCardSpy)
+      electronApi.createCard.mockImplementation(createCardSpy)
 
       await wrapper.get('form').trigger('submit.prevent')
 
@@ -53,11 +57,11 @@ describe('AddCardView', () => {
   })
 
   describe('when the data is valid', () => {
-    it('calls the create card method', async () => {
+    it<LocalTestContext>('calls the create card method', async ({ electronApi }) => {
       const createCardMock = vi.fn(() => {
         return { data: {} }
       })
-      electronAPI.createCard.mockImplementation(createCardMock)
+      electronApi.createCard.mockImplementation(createCardMock)
 
       const wrapper = mount(AddCardView)
 
@@ -75,11 +79,11 @@ describe('AddCardView', () => {
     })
 
     describe('and the create request succeeds', () => {
-      it('shows the success method', async () => {
+      it<LocalTestContext>('shows the success method', async ({ electronApi }) => {
         const createCardMock = vi.fn(() => {
           return { data: {} }
         })
-        electronAPI.createCard.mockImplementation(createCardMock)
+        electronApi.createCard.mockImplementation(createCardMock)
 
         const wrapper = mount(AddCardView)
 
@@ -95,11 +99,11 @@ describe('AddCardView', () => {
     })
 
     describe('and the create request fails', () => {
-      it('shows the error message', async () => {
+      it<LocalTestContext>('shows the error message', async ({ electronApi }) => {
         const createCardMock = vi.fn(() => {
           return { error: new Error('oh no') }
         })
-        electronAPI.createCard.mockImplementation(createCardMock)
+        electronApi.createCard.mockImplementation(createCardMock)
 
         const wrapper = mount(AddCardView)
 

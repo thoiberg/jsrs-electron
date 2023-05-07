@@ -1,6 +1,7 @@
 // For some reason importing it returns:
 // "Error: PrismaClient is unable to be run in the browser."
 const { PrismaClient } = require('@prisma/client')
+import type { PrismaClient as ClientType } from '@prisma/client'
 // import { PrismaClient } from '@prisma/client'
 import path from 'path'
 import log from 'electron-log'
@@ -14,7 +15,7 @@ if (!dbUrl) {
   throw Error('could not determine the correct DB location. Exiting...')
 }
 
-export const prisma = new PrismaClient({
+export const prisma: ClientType = new PrismaClient({
   datasources: {
     db: {
       url: dbUrl

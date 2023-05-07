@@ -5,7 +5,6 @@
   "main": ".vite/build/main.js",
   "scripts": {
     "dev": "vite",
-    "dev:seed": "NODE_ENV=development ts-node utils/devSeed.ts",
     "build": "run-p type-check build-only",
     "preview": "vite preview",
     "test:unit": "node testSetup.js && vitest",
@@ -19,6 +18,9 @@
     "start": "NODE_ENV=development electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make"
+  },
+  "prisma": {
+    "seed": "ts-node utils/devSeed.ts"
   },
   "dependencies": {
     "@prisma/client": "^4.12.0",

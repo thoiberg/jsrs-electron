@@ -1,9 +1,17 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import AddCardView from '../AddCardView.vue'
 import { flushPromises } from '@vue/test-utils'
+import { mockDeep } from 'vitest-mock-extended'
+import type { electronAPI } from 'env'
 
 describe('AddCardView', () => {
+  const electronAPI = mockDeep<electronAPI>()
+
+  beforeEach(() => {
+    vi.stubGlobal('electronAPI', electronAPI)
+  })
+
   describe('when the english answer is missing', () => {
     it('shows an error message', async () => {
       const wrapper = mount(AddCardView)
@@ -14,18 +22,13 @@ describe('AddCardView', () => {
     })
 
     it('does not attempt to create the card', async () => {
-      const createCardApi = vi.fn(() => {})
-      const electronApi = vi.fn(() => ({
-        createCard: createCardApi
-      }))
-
-      vi.stubGlobal('electronAPI', electronApi)
-
       const wrapper = mount(AddCardView)
+      const createCardSpy = vi.fn()
+      electronAPI.createCard.mockImplementation(createCardSpy)
 
       await wrapper.get('form').trigger('submit.prevent')
 
-      expect(createCardApi).not.toBeCalled()
+      expect(createCardSpy).not.toBeCalled()
     })
   })
 
@@ -39,31 +42,22 @@ describe('AddCardView', () => {
     })
 
     it('does not attempt to create the card', async () => {
-      const createCardApi = vi.fn(() => {})
-      const electronApi = vi.fn(() => ({
-        createCard: createCardApi
-      }))
-
-      vi.stubGlobal('electronAPI', electronApi)
-
       const wrapper = mount(AddCardView)
+      const createCardSpy = vi.fn()
+      electronAPI.createCard.mockImplementation(createCardSpy)
 
       await wrapper.get('form').trigger('submit.prevent')
 
-      expect(createCardApi).not.toBeCalled()
+      expect(createCardSpy).not.toBeCalled()
     })
   })
 
   describe('when the data is valid', () => {
     it('calls the create card method', async () => {
-      const createCardApi = vi.fn(() => {
+      const createCardMock = vi.fn(() => {
         return { data: {} }
       })
-      const electronApi = {
-        createCard: createCardApi
-      }
-
-      vi.stubGlobal('electronAPI', electronApi)
+      electronAPI.createCard.mockImplementation(createCardMock)
 
       const wrapper = mount(AddCardView)
 
@@ -73,7 +67,7 @@ describe('AddCardView', () => {
 
       await wrapper.get('form').trigger('submit.prevent')
 
-      expect(createCardApi).toBeCalledWith({
+      expect(createCardMock).toBeCalledWith({
         english: 'cat',
         kana: 'ねこ',
         kanji: '猫'
@@ -82,14 +76,10 @@ describe('AddCardView', () => {
 
     describe('and the create request succeeds', () => {
       it('shows the success method', async () => {
-        const createCardApi = vi.fn(() => {
+        const createCardMock = vi.fn(() => {
           return { data: {} }
         })
-        const electronApi = {
-          createCard: createCardApi
-        }
-
-        vi.stubGlobal('electronAPI', electronApi)
+        electronAPI.createCard.mockImplementation(createCardMock)
 
         const wrapper = mount(AddCardView)
 
@@ -106,14 +96,10 @@ describe('AddCardView', () => {
 
     describe('and the create request fails', () => {
       it('shows the error message', async () => {
-        const createCardApi = vi.fn(() => {
+        const createCardMock = vi.fn(() => {
           return { error: new Error('oh no') }
         })
-        const electronApi = {
-          createCard: createCardApi
-        }
-
-        vi.stubGlobal('electronAPI', electronApi)
+        electronAPI.createCard.mockImplementation(createCardMock)
 
         const wrapper = mount(AddCardView)
 

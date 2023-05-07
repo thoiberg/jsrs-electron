@@ -1,6 +1,6 @@
 {
   "extends": "@vue/tsconfig/tsconfig.web.json",
-  "include": ["env.d.ts", "frontend/**/*", "frontend/**/*.vue", "electron/*.ts"],
+  "include": ["env.d.ts", "frontend/**/*", "frontend/**/*.vue", "electron/*.ts", "prisma/**/*.ts"],
   "exclude": ["frontend/**/__tests__/*"],
   "compilerOptions": {
     "composite": true,

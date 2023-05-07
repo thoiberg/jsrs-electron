@@ -1,5 +1,6 @@
 import { contextBridge, ipcRenderer } from 'electron'
+import type { CreateCardRequest } from './types'
 
 contextBridge.exposeInMainWorld('electronAPI', {
-  getAllTest: () => ipcRenderer.invoke('get-all-test')
+  createCard: (args: CreateCardRequest) => ipcRenderer.invoke('create-card', args)
 })

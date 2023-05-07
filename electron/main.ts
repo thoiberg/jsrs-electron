@@ -2,7 +2,12 @@ import electron, { app, ipcMain } from 'electron'
 import process from 'process'
 import path from 'path'
 
-import { setupDb, prisma } from './prisma'
+import { setupDb } from '../prisma/prisma'
+import { createCard } from '../prisma/queries'
+
+// Taken from the docs: https://www.electronforge.io/config/plugins/vite#hot-module-replacement-hmr
+declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string
+declare const MAIN_WINDOW_VITE_NAME: string
 
 const { BrowserWindow } = electron
 
@@ -10,8 +15,8 @@ function createWindow() {
   setupDb()
 
   const mainWindow = new BrowserWindow({
-    width: 900,
-    height: 680,
+    width: 1641,
+    height: 932,
     webPreferences: {
       nodeIntegration: true,
       // enableRemoteModule: true,
@@ -22,6 +27,7 @@ function createWindow() {
   // and load the index.html of the app.
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
     mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL)
+    // TODO: Set the dev server flag in the electron api
   } else {
     mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`))
   }
@@ -32,16 +38,7 @@ function createWindow() {
   // mainWindow.on('closed', () => {
   //   mainWindow = null
   // })
-
-  ipcMain.handle('get-all-test', async () => {
-    try {
-      const data = await prisma.test.findMany()
-
-      return data
-    } catch (e) {
-      return e
-    }
-  })
+  ipcMain.handle('create-card', createCard)
 }
 
 app.whenReady().then(() => {

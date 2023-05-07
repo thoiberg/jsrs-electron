@@ -7,14 +7,49 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model other_test {
-  id      Int     @id @default(autoincrement())
-  name    String?
-  message String?
+model Card {
+  id               String            @id @default(uuid())
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  japaneseCardSide JapaneseCardSide?
+  englishCardSide  EnglishCardSide?
 }
 
-model test {
-  id      Int     @id @default(autoincrement())
-  name    String?
-  message String?
+model JapaneseCardSide {
+  id             String           @id @default(uuid())
+  nextReviewAt   DateTime         @default(now())
+  card           Card             @relation(fields: [cardId], references: [id])
+  cardId         String           @unique
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  japaneseAnswers JapaneseAnswer[]
+}
+
+model JapaneseAnswer {
+  id                 String           @id @default(uuid())
+  kanji              String?
+  kana               String?
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  japaneseCardSide   JapaneseCardSide @relation(fields: [japaneseCardSideId], references: [id])
+  japaneseCardSideId String           @unique
+}
+
+model EnglishCardSide {
+  id            String          @id @default(uuid())
+  nextReviewAt  DateTime        @default(now())
+  card          Card            @relation(fields: [cardId], references: [id])
+  cardId        String          @unique
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  englishAnswers EnglishAnswer[]
+}
+
+model EnglishAnswer {
+  id                String          @id @default(uuid())
+  answer            String
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  englishCardSide   EnglishCardSide @relation(fields: [englishCardSideId], references: [id])
+  englishCardSideId String          @unique
 }

@@ -1,12 +1,11 @@
 import type { RPCResponse } from 'electron/types'
-import { prisma } from 'prisma/prisma'
+import { prisma } from '../prisma'
 import errorProcessing from './utils/errorProcessing'
 
 export default async function getReviewableCards(): Promise<RPCResponse> {
   try {
     const now = new Date()
-    // find all cards where englishCardSide nextReviewAt is le to now
-    // OR japaneseCardSide nextReviewAt is le to now
+
     const cards = await prisma.card.findMany({
       where: {
         OR: [

@@ -13,14 +13,14 @@ const reviewableCards: Ref<Card[]> = ref([])
 const serverError = ref('')
 
 onMounted(async () => {
-  const response = await window.electronAPI.getReviewableCards()
+  const { data, error } = await window.electronAPI.getReviewableCards()
 
-  if ('error' in response) {
-    serverError.value = response.error.message
+  if (error) {
+    serverError.value = error.message
     return
   }
 
-  reviewableCards.value = response.data as Card[]
+  reviewableCards.value = data as Card[]
 })
 </script>
 

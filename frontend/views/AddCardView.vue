@@ -61,14 +61,14 @@ async function onSubmit() {
     return
   }
 
-  const response = await window.electronAPI.createCard({
+  const { error } = await window.electronAPI.createCard({
     english: english.value,
     kana: kana.value,
     kanji: kanji.value
   })
 
-  if ('error' in response) {
-    errorMessage.value = response.error.message
+  if (error) {
+    errorMessage.value = error.message
     return
   }
 

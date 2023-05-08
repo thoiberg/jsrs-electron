@@ -6,9 +6,11 @@ export interface CreateCardRequest {
 
 export interface RPCSuccessResponse {
   data: Object
+  error?: undefined
 }
 
 export interface RPCErrorResponse {
   error: Error
+  data?: undefined
 }
 export type RPCResponse = RPCSuccessResponse | RPCErrorResponse

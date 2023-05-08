@@ -48,47 +48,5 @@ describe('createCardQuery', () => {
         expect(error).toEqual(returnedError)
       })
     })
-
-    describe('with an object with a message property', () => {
-      it('returns an error with the message', async () => {
-        const returnedError = { message: 'oh no' }
-
-        mockPrisma.card.create.mockImplementation(() => {
-          throw returnedError
-        })
-
-        const response = await createCard({} as Event, {
-          english: 'cat',
-          kana: 'ねこ',
-          kanji: '猫'
-        })
-
-        const error = (response as RPCErrorResponse).error
-
-        expect(error).toBeInstanceOf(Error)
-        expect(error.message).toEqual('oh no')
-      })
-    })
-
-    describe('with an unknown error value', () => {
-      it('returns a generic error message', async () => {
-        const returnedError = { no: 'idea' }
-
-        mockPrisma.card.create.mockImplementation(() => {
-          throw returnedError
-        })
-
-        const response = await createCard({} as Event, {
-          english: 'cat',
-          kana: 'ねこ',
-          kanji: '猫'
-        })
-
-        const error = (response as RPCErrorResponse).error
-
-        expect(error).toBeInstanceOf(Error)
-        expect(error.message).toEqual('something went wrong')
-      })
-    })
   })
 })

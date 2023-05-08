@@ -1,6 +1,7 @@
 import { prisma } from '../prisma'
 import type { CreateCardRequest, RPCResponse } from '../../electron/types'
 import type { Event } from 'electron'
+import errorProcessing from './utils/errorProcessing'
 
 export default async function createCard(
   event: Event,
@@ -33,23 +34,6 @@ export default async function createCard(
 
     return { data: card }
   } catch (e) {
-    let error
-    if (e instanceof Error) {
-      error = e
-    } else if (hasMessage(e)) {
-      error = Error(e.message)
-    } else {
-      error = Error('something went wrong')
-    }
-
-    return { error }
+    return errorProcessing(e)
   }
-}
-
-function hasMessage(x: unknown): x is { message: string } {
-  if (x && typeof x === 'object' && 'message' in x) {
-    return true
-  }
-
-  return false
 }

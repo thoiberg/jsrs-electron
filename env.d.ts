@@ -10,4 +10,5 @@ export declare global {
 
 interface electronAPI {
   createCard: (params: CreateCardRequest) => RPCResponse
+  getReviewableCards: () => RPCResponse
 }

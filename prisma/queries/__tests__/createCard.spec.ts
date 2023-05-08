@@ -28,8 +28,8 @@ describe('createCardQuery', () => {
     })
   })
 
-  describe('when the request fails', async () => {
-    describe('with an error object', async () => {
+  describe('when the request fails', () => {
+    describe('with an error object', () => {
       it('returns as error', async () => {
         const returnedError = new Error('oh no')
 

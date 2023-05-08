@@ -1,5 +1,6 @@
 /// <reference types="vite/client" />
 
+import type { Card } from '@prisma/client'
 import type { CreateCardRequest, RPCResponse } from 'electron/types'
 
 export declare global {
@@ -9,6 +10,6 @@ export declare global {
 }
 
 interface electronAPI {
-  createCard: (params: CreateCardRequest) => RPCResponse
-  getReviewableCards: () => RPCResponse
+  createCard: (params: CreateCardRequest) => RPCResponse<Card>
+  getReviewableCards: () => RPCResponse<Card[]>
 }

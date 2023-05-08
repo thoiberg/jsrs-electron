@@ -17,8 +17,24 @@ describe('HomeView', () => {
 
   describe('when the data is retrieved successfully', () => {
     it<LocalTestContext>('shows the number of reviewable cards', async ({ electronApi }) => {
+      const firstCard = {
+        id: '1',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }
+      const secondCard = {
+        id: '1',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }
+      const thirdCard = {
+        id: '1',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }
+
       const getReviewableCardsMock = vi.fn(() => {
-        return { data: [{}, {}, {}] }
+        return { data: [firstCard, secondCard, thirdCard] }
       })
       electronApi.getReviewableCards.mockImplementation(getReviewableCardsMock)
       const wrapper = mount(HomeView)

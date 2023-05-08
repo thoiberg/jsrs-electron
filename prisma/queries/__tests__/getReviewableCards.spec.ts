@@ -1,6 +1,4 @@
 import { describe, expect, it, vi } from 'vitest'
-import type { RPCErrorResponse, RPCSuccessResponse } from 'electron/types'
-import type { Card } from '@prisma/client'
 import { prisma as mockPrisma } from '../../__mocks__/prisma'
 import getReviewableCards from '../getReviewableCards'
 
@@ -18,10 +16,10 @@ describe('getReviewableCards', () => {
       mockPrisma.card.findMany.mockResolvedValue([card])
 
       const response = await getReviewableCards()
-      const data = (response as RPCSuccessResponse).data
 
-      expect((data as Card[]).length).toEqual(1)
-      expect((data as Card[])[0].id).toEqual('1')
+      expect(response.data).toBeDefined()
+      expect(response.data!.length).toEqual(1)
+      expect(response.data!).toEqual([card])
     })
   })
 
@@ -36,9 +34,7 @@ describe('getReviewableCards', () => {
 
         const response = await getReviewableCards()
 
-        const error = (response as RPCErrorResponse).error
-
-        expect(error).toEqual(returnedError)
+        expect(response.error).toEqual(returnedError)
       })
     })
   })

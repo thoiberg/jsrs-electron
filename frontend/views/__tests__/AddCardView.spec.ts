@@ -58,8 +58,13 @@ describe('AddCardView', () => {
 
   describe('when the data is valid', () => {
     it<LocalTestContext>('calls the create card method', async ({ electronApi }) => {
+      const testCard = {
+        id: '1',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }
       const createCardMock = vi.fn(() => {
-        return { data: {} }
+        return { data: testCard }
       })
       electronApi.createCard.mockImplementation(createCardMock)
 
@@ -80,8 +85,13 @@ describe('AddCardView', () => {
 
     describe('and the create request succeeds', () => {
       it<LocalTestContext>('shows the success method', async ({ electronApi }) => {
+        const testCard = {
+          id: '1',
+          createdAt: new Date(),
+          updatedAt: new Date()
+        }
         const createCardMock = vi.fn(() => {
-          return { data: {} }
+          return { data: testCard }
         })
         electronApi.createCard.mockImplementation(createCardMock)
 

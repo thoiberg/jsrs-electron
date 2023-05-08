@@ -4,8 +4,8 @@ export interface CreateCardRequest {
   kana: string
 }
 
-export interface RPCSuccessResponse {
-  data: Object
+export interface RPCSuccessResponse<T> {
+  data: T
   error?: undefined
 }
 
@@ -13,4 +13,4 @@ export interface RPCErrorResponse {
   error: Error
   data?: undefined
 }
-export type RPCResponse = RPCSuccessResponse | RPCErrorResponse
+export type RPCResponse<T> = RPCSuccessResponse<T> | RPCErrorResponse

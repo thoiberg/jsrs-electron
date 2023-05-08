@@ -20,7 +20,7 @@ onMounted(async () => {
     return
   }
 
-  reviewableCards.value = data as Card[]
+  reviewableCards.value = data
 })
 </script>
 

@@ -1,8 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import createCard from '../createCard'
 import type { Event } from 'electron'
-import type { RPCErrorResponse, RPCSuccessResponse } from 'electron/types'
-import type { Card } from '@prisma/client'
 import { prisma as mockPrisma } from '../../__mocks__/prisma'
 
 vi.mock('../../prisma.ts')
@@ -22,9 +20,8 @@ describe('createCardQuery', () => {
         kana: 'ねこ',
         kanji: '猫'
       })
-      const data = (response as RPCSuccessResponse).data
 
-      expect((data as Card).id).toEqual('1')
+      expect(response.data).toEqual(card)
     })
   })
 
@@ -43,9 +40,7 @@ describe('createCardQuery', () => {
           kanji: '猫'
         })
 
-        const error = (response as RPCErrorResponse).error
-
-        expect(error).toEqual(returnedError)
+        expect(response.error).toEqual(returnedError)
       })
     })
   })

@@ -23,12 +23,12 @@ describe('HomeView', () => {
         updatedAt: new Date()
       }
       const secondCard = {
-        id: '1',
+        id: '2',
         createdAt: new Date(),
         updatedAt: new Date()
       }
       const thirdCard = {
-        id: '1',
+        id: '3',
         createdAt: new Date(),
         updatedAt: new Date()
       }

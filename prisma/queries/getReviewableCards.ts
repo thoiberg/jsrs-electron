@@ -1,9 +1,8 @@
-import type { Event } from 'electron'
 import type { RPCResponse } from 'electron/types'
 import { prisma } from 'prisma/prisma'
 import errorProcessing from './utils/errorProcessing'
 
-export default async function getReviewableCards(event: Event): Promise<RPCResponse> {
+export default async function getReviewableCards(): Promise<RPCResponse> {
   try {
     const now = new Date()
     // find all cards where englishCardSide nextReviewAt is le to now

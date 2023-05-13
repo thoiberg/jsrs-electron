@@ -3,7 +3,7 @@ import process from 'process'
 import path from 'path'
 
 import { setupDb } from '../prisma/prisma'
-import { createCard, getReviewableCards } from '../prisma/queries'
+import { createCard, getReviewableCards, searchCards } from '../prisma/queries'
 
 // Taken from the docs: https://www.electronforge.io/config/plugins/vite#hot-module-replacement-hmr
 declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string
@@ -40,6 +40,7 @@ function createWindow() {
   // })
   ipcMain.handle('create-card', createCard)
   ipcMain.handle('get-reviewable-cards', getReviewableCards)
+  ipcMain.handle('search-cards', searchCards)
 }
 
 app.whenReady().then(() => {

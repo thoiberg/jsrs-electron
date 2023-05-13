@@ -3,5 +3,6 @@ import type { CreateCardRequest } from './types'
 
 contextBridge.exposeInMainWorld('electronAPI', {
   createCard: (args: CreateCardRequest) => ipcRenderer.invoke('create-card', args),
-  getReviewableCards: () => ipcRenderer.invoke('get-reviewable-cards')
+  getReviewableCards: () => ipcRenderer.invoke('get-reviewable-cards'),
+  searchCards: () => ipcRenderer.invoke('search-cards')
 })

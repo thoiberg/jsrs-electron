@@ -4,6 +4,10 @@ export interface CreateCardRequest {
   kana: string
 }
 
+export interface SearchCardsRequest {
+  query?: string
+}
+
 export interface RPCSuccessResponse<T> {
   data: T
   error?: undefined

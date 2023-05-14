@@ -41,7 +41,7 @@ describe('BrowseView', () => {
 
     const firstCardData = rows[0].findAll('td')
     expect(firstCardData[0].text()).toContain('cat')
-    expect(firstCardData[1].text()).toContain('ねこ')
+    expect(firstCardData[1].text()).toContain('ねこ,ネコ')
     expect(firstCardData[2].text()).toContain('猫')
     expect(firstCardData[3].text()).toContain('14/05/2023')
 
@@ -142,6 +142,13 @@ const testCards = (firstCardCreatedAt: Date, secondCardCreatedAt: Date) => {
             updatedAt: new Date(),
             kanji: '猫',
             kana: 'ねこ'
+          },
+          {
+            japaneseCardSideId: '2',
+            id: '1',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            kana: 'ネコ'
           }
         ]
       }

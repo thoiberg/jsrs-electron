@@ -13,19 +13,19 @@ export default async function getReviewableCards(): Promise<RPCResponse<Card[]>>
           {
             englishCardSide: {
               nextReviewAt: {
-                lte: now
-              }
-            }
+                lte: now,
+              },
+            },
           },
           {
             japaneseCardSide: {
               nextReviewAt: {
-                lte: now
-              }
-            }
-          }
-        ]
-      }
+                lte: now,
+              },
+            },
+          },
+        ],
+      },
     })
     return { data: cards }
   } catch (e) {

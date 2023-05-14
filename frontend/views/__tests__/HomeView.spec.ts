@@ -20,17 +20,17 @@ describe('HomeView', () => {
       const firstCard = {
         id: '1',
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       }
       const secondCard = {
         id: '2',
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       }
       const thirdCard = {
         id: '3',
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       }
 
       const getReviewableCardsMock = vi.fn(() => {

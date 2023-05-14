@@ -18,9 +18,9 @@ if (!dbUrl) {
 export const prisma: ClientType = new PrismaClient({
   datasources: {
     db: {
-      url: dbUrl
-    }
-  }
+      url: dbUrl,
+    },
+  },
 })
 
 // TODO: Only run the migrations when there are un-applied migrations waiting
@@ -40,13 +40,13 @@ export function setupDb() {
   const schemaPath = path.join(
     app.getAppPath().replace('app.asar', 'app.asar.unpacked'),
     'prisma',
-    'schema.prisma'
+    'schema.prisma',
   )
 
   // ['migrate', 'deploy', '--schema', schemaPath]
   const child = fork(prismaPath, ['db', 'push', '--schema', schemaPath], {
     env: { ...process.env, DATABASE_URL: dbUrl },
-    stdio: 'pipe'
+    stdio: 'pipe',
   })
 
   child.on('message', (msg) => {

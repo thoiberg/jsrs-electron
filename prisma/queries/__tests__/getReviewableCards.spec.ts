@@ -10,7 +10,7 @@ describe('getReviewableCards', () => {
       const card = {
         id: '1',
         createdAt: new Date('2023-05-10'),
-        updatedAt: new Date('2023-05-10')
+        updatedAt: new Date('2023-05-10'),
       }
 
       mockPrisma.card.findMany.mockResolvedValue([card])

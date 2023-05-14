@@ -124,9 +124,9 @@ const testCards = (firstCardCreatedAt: Date, secondCardCreatedAt: Date): CardWit
             id: '1',
             createdAt: new Date(),
             updatedAt: new Date(),
-            answer: 'cat'
-          }
-        ]
+            answer: 'cat',
+          },
+        ],
       },
       japaneseCardSide: {
         id: '1',
@@ -141,7 +141,7 @@ const testCards = (firstCardCreatedAt: Date, secondCardCreatedAt: Date): CardWit
             createdAt: new Date(),
             updatedAt: new Date(),
             kanji: '猫',
-            kana: 'ねこ'
+            kana: 'ねこ',
           },
           {
             japaneseCardSideId: '2',
@@ -149,10 +149,10 @@ const testCards = (firstCardCreatedAt: Date, secondCardCreatedAt: Date): CardWit
             createdAt: new Date(),
             updatedAt: new Date(),
             kana: 'ネコ',
-            kanji: ''
-          }
-        ]
-      }
+            kanji: '',
+          },
+        ],
+      },
     },
     {
       id: '2',
@@ -170,9 +170,9 @@ const testCards = (firstCardCreatedAt: Date, secondCardCreatedAt: Date): CardWit
             id: '2',
             createdAt: new Date(),
             updatedAt: new Date(),
-            answer: 'dog'
-          }
-        ]
+            answer: 'dog',
+          },
+        ],
       },
       japaneseCardSide: {
         id: '2',
@@ -187,10 +187,10 @@ const testCards = (firstCardCreatedAt: Date, secondCardCreatedAt: Date): CardWit
             createdAt: new Date(),
             updatedAt: new Date(),
             kanji: '犬',
-            kana: 'いぬ'
-          }
-        ]
-      }
-    }
+            kana: 'いぬ',
+          },
+        ],
+      },
+    },
   ]
 }

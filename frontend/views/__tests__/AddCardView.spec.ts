@@ -54,7 +54,7 @@ describe('AddCardView', () => {
       const testCard = {
         id: '1',
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       }
       const createCardMock = vi.fn(() => {
         return { data: testCard }
@@ -72,7 +72,7 @@ describe('AddCardView', () => {
       expect(createCardMock).toBeCalledWith({
         english: 'cat',
         kana: 'ねこ',
-        kanji: '猫'
+        kanji: '猫',
       })
     })
 
@@ -82,7 +82,7 @@ describe('AddCardView', () => {
         const testCard = {
           id: '1',
           createdAt: new Date(),
-          updatedAt: new Date()
+          updatedAt: new Date(),
         }
         const createCardMock = vi.fn(() => {
           return { data: testCard }

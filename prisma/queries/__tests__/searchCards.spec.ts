@@ -12,7 +12,7 @@ describe('searchCards', () => {
       const card: Card = {
         id: '1',
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       }
       mockPrisma.card.findMany.mockResolvedValue([card])
 
@@ -26,48 +26,48 @@ describe('searchCards', () => {
                 japaneseAnswers: {
                   some: {
                     kana: {
-                      contains: 'cat'
-                    }
-                  }
-                }
-              }
+                      contains: 'cat',
+                    },
+                  },
+                },
+              },
             },
             {
               japaneseCardSide: {
                 japaneseAnswers: {
                   some: {
                     kanji: {
-                      contains: 'cat'
-                    }
-                  }
-                }
-              }
+                      contains: 'cat',
+                    },
+                  },
+                },
+              },
             },
             {
               englishCardSide: {
                 englishAnswers: {
                   some: {
                     answer: {
-                      contains: 'cat'
-                    }
-                  }
-                }
-              }
-            }
-          ]
+                      contains: 'cat',
+                    },
+                  },
+                },
+              },
+            },
+          ],
         },
         include: {
           englishCardSide: {
             include: {
-              englishAnswers: true
-            }
+              englishAnswers: true,
+            },
           },
           japaneseCardSide: {
             include: {
-              japaneseAnswers: true
-            }
-          }
-        }
+              japaneseAnswers: true,
+            },
+          },
+        },
       })
 
       expect(response).toEqual({ data: [card] })
@@ -82,15 +82,15 @@ describe('searchCards', () => {
         include: {
           englishCardSide: {
             include: {
-              englishAnswers: true
-            }
+              englishAnswers: true,
+            },
           },
           japaneseCardSide: {
             include: {
-              japaneseAnswers: true
-            }
-          }
-        }
+              japaneseAnswers: true,
+            },
+          },
+        },
       })
     })
   })

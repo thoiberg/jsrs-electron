@@ -7,7 +7,7 @@ const cards = [
   { english: 'dog', kana: 'いぬ', kanji: '犬' },
   { english: 'read', kana: 'よむ', kanji: '読む' },
   { english: 'cool', kanji: '涼しい' },
-  { english: 'write', kana: 'かく' }
+  { english: 'write', kana: 'かく' },
 ]
 
 cards.forEach(async (card) => {
@@ -18,20 +18,20 @@ cards.forEach(async (card) => {
           japaneseAnswers: {
             create: {
               kana: card.kana,
-              kanji: card.kanji
-            }
-          }
-        }
+              kanji: card.kanji,
+            },
+          },
+        },
       },
       englishCardSide: {
         create: {
           englishAnswers: {
             create: {
-              answer: card.english
-            }
-          }
-        }
-      }
-    }
+              answer: card.english,
+            },
+          },
+        },
+      },
+    },
   })
 })

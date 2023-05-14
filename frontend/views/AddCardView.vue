@@ -64,7 +64,7 @@ async function onSubmit() {
   const { error } = await window.electronAPI.createCard({
     english: english.value,
     kana: kana.value,
-    kanji: kanji.value
+    kanji: kanji.value,
   })
 
   if (error) {

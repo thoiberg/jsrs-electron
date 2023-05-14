@@ -6,7 +6,7 @@ import type { Card } from '@prisma/client'
 
 export default async function createCard(
   event: Event,
-  { english, kana, kanji }: CreateCardRequest
+  { english, kana, kanji }: CreateCardRequest,
 ): Promise<RPCResponse<Card>> {
   try {
     const card = await prisma.card.create({
@@ -16,21 +16,21 @@ export default async function createCard(
             japaneseAnswers: {
               create: {
                 kana,
-                kanji
-              }
-            }
-          }
+                kanji,
+              },
+            },
+          },
         },
         englishCardSide: {
           create: {
             englishAnswers: {
               create: {
-                answer: english
-              }
-            }
-          }
-        }
-      }
+                answer: english,
+              },
+            },
+          },
+        },
+      },
     })
 
     return { data: card }

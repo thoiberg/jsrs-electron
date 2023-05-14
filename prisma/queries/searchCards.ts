@@ -21,19 +21,19 @@ export type CardWithEverything = Prisma.CardGetPayload<{
 
 export default async function searchCards(
   event: Event,
-  params?: SearchCardsRequest
+  params?: SearchCardsRequest,
 ): Promise<RPCResponse<CardWithEverything[]>> {
   const includeRelationshipsConfig = {
     englishCardSide: {
       include: {
-        englishAnswers: true
-      }
+        englishAnswers: true,
+      },
     },
     japaneseCardSide: {
       include: {
-        japaneseAnswers: true
-      }
-    }
+        japaneseAnswers: true,
+      },
+    },
   }
 
   try {
@@ -46,37 +46,37 @@ export default async function searchCards(
                 japaneseAnswers: {
                   some: {
                     kana: {
-                      contains: params?.query
-                    }
-                  }
-                }
-              }
+                      contains: params?.query,
+                    },
+                  },
+                },
+              },
             },
             {
               japaneseCardSide: {
                 japaneseAnswers: {
                   some: {
                     kanji: {
-                      contains: params?.query
-                    }
-                  }
-                }
-              }
+                      contains: params?.query,
+                    },
+                  },
+                },
+              },
             },
             {
               englishCardSide: {
                 englishAnswers: {
                   some: {
                     answer: {
-                      contains: params?.query
-                    }
-                  }
-                }
-              }
-            }
-          ]
+                      contains: params?.query,
+                    },
+                  },
+                },
+              },
+            },
+          ],
         },
-        include: includeRelationshipsConfig
+        include: includeRelationshipsConfig,
       })
 
       // TODO: investigate and remove dupes if necessary
@@ -84,7 +84,7 @@ export default async function searchCards(
       return { data }
     } else {
       const data = await prisma.card.findMany({
-        include: includeRelationshipsConfig
+        include: includeRelationshipsConfig,
       })
 
       return { data }

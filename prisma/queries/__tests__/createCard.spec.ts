@@ -11,14 +11,14 @@ describe('createCardQuery', () => {
       const card = {
         id: '1',
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       }
       mockPrisma.card.create.mockResolvedValue(card)
 
       const response = await createCard({} as Event, {
         english: 'cat',
         kana: 'ねこ',
-        kanji: '猫'
+        kanji: '猫',
       })
 
       expect(response.data).toEqual(card)
@@ -37,7 +37,7 @@ describe('createCardQuery', () => {
         const response = await createCard({} as Event, {
           english: 'cat',
           kana: 'ねこ',
-          kanji: '猫'
+          kanji: '猫',
         })
 
         expect(response.error).toEqual(returnedError)

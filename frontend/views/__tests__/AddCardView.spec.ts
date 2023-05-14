@@ -1,21 +1,10 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import AddCardView from '../AddCardView.vue'
 import { flushPromises } from '@vue/test-utils'
-import { mockDeep, type DeepMockProxy } from 'vitest-mock-extended'
-import type { electronAPI } from 'env'
+import mockElectronApi from '../__mocks__/electronApi'
 
 describe('AddCardView', () => {
-  interface LocalTestContext {
-    electronApi: DeepMockProxy<electronAPI>
-  }
-
-  beforeEach<LocalTestContext>((context) => {
-    const electronApi = mockDeep<electronAPI>()
-    context.electronApi = electronApi
-    vi.stubGlobal('electronAPI', electronApi)
-  })
-
   describe('when the english answer is missing', () => {
     it('shows an error message', async () => {
       const wrapper = mount(AddCardView)
@@ -25,11 +14,12 @@ describe('AddCardView', () => {
       expect(wrapper.get('ul').text()).toContain('English answer must be supplied')
     })
 
-    it<LocalTestContext>('does not attempt to create the card', async ({ electronApi }) => {
-      const wrapper = mount(AddCardView)
+    it('does not attempt to create the card', async () => {
+      const electronApiMock = mockElectronApi()
       const createCardSpy = vi.fn()
-      electronApi.createCard.mockImplementation(createCardSpy)
+      electronApiMock.createCard.mockImplementation(createCardSpy)
 
+      const wrapper = mount(AddCardView)
       await wrapper.get('form').trigger('submit.prevent')
 
       expect(createCardSpy).not.toBeCalled()
@@ -45,10 +35,12 @@ describe('AddCardView', () => {
       expect(wrapper.get('ul').text()).toContain('Kana or Kanji answer must be supplied')
     })
 
-    it<LocalTestContext>('does not attempt to create the card', async ({ electronApi }) => {
-      const wrapper = mount(AddCardView)
+    it('does not attempt to create the card', async () => {
+      const electronApiMock = mockElectronApi()
       const createCardSpy = vi.fn()
-      electronApi.createCard.mockImplementation(createCardSpy)
+      electronApiMock.createCard.mockImplementation(createCardSpy)
+
+      const wrapper = mount(AddCardView)
 
       await wrapper.get('form').trigger('submit.prevent')
 
@@ -57,7 +49,8 @@ describe('AddCardView', () => {
   })
 
   describe('when the data is valid', () => {
-    it<LocalTestContext>('calls the create card method', async ({ electronApi }) => {
+    it('calls the create card method', async () => {
+      const electronApiMock = mockElectronApi()
       const testCard = {
         id: '1',
         createdAt: new Date(),
@@ -66,7 +59,7 @@ describe('AddCardView', () => {
       const createCardMock = vi.fn(() => {
         return { data: testCard }
       })
-      electronApi.createCard.mockImplementation(createCardMock)
+      electronApiMock.createCard.mockImplementation(createCardMock)
 
       const wrapper = mount(AddCardView)
 
@@ -84,7 +77,8 @@ describe('AddCardView', () => {
     })
 
     describe('and the create request succeeds', () => {
-      it<LocalTestContext>('shows the success method', async ({ electronApi }) => {
+      it('shows the success method', async () => {
+        const electronApiMock = mockElectronApi()
         const testCard = {
           id: '1',
           createdAt: new Date(),
@@ -93,7 +87,7 @@ describe('AddCardView', () => {
         const createCardMock = vi.fn(() => {
           return { data: testCard }
         })
-        electronApi.createCard.mockImplementation(createCardMock)
+        electronApiMock.createCard.mockImplementation(createCardMock)
 
         const wrapper = mount(AddCardView)
 
@@ -109,11 +103,12 @@ describe('AddCardView', () => {
     })
 
     describe('and the create request fails', () => {
-      it<LocalTestContext>('shows the error message', async ({ electronApi }) => {
+      it('shows the error message', async () => {
+        const electronApiMock = mockElectronApi()
         const createCardMock = vi.fn(() => {
           return { error: new Error('oh no') }
         })
-        electronApi.createCard.mockImplementation(createCardMock)
+        electronApiMock.createCard.mockImplementation(createCardMock)
 
         const wrapper = mount(AddCardView)
 

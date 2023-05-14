@@ -20,6 +20,7 @@
 <script setup lang="ts">
 import type { CardWithEverything } from 'prisma/queries/searchCards'
 import { onMounted, ref, type Ref } from 'vue'
+import formatDateTime from '../utils/formatDateTime'
 
 const cards: Ref<CardWithEverything[]> = ref([])
 const serverError = ref('')
@@ -33,10 +34,6 @@ async function retrieveData(query?: string) {
   } else {
     cards.value = data
   }
-}
-
-function formatDateTime(date: Date) {
-  return Intl.DateTimeFormat(navigator.language, { timeZoneName: 'short' }).format(date)
 }
 
 async function onSearchInput(event: Event) {

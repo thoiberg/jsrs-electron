@@ -76,7 +76,7 @@ describe('searchCards', () => {
 
   describe('when a query is not supplied', () => {
     it('returns all cards', async () => {
-      await searchCards({} as Event, {})
+      await searchCards({} as Event)
 
       expect(mockPrisma.card.findMany).toBeCalledWith({
         include: {
@@ -102,7 +102,7 @@ describe('searchCards', () => {
         throw returnedError
       })
 
-      const response = await searchCards({} as Event, {})
+      const response = await searchCards({} as Event)
 
       expect(response).toEqual({ error: returnedError })
     })

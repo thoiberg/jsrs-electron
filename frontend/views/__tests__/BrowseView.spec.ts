@@ -24,7 +24,7 @@ describe('BrowseView', () => {
   it('renders the cards in the table', async () => {
     const firstCardCreatedAt = new Date('2023-05-14, 10:00:00')
     const secondCardCreatedAt = new Date('2022-12-29, 15:13:00')
-    const data: CardWithEverything[] = testCards(firstCardCreatedAt, secondCardCreatedAt)
+    const data = testCards(firstCardCreatedAt, secondCardCreatedAt)
 
     const navigatorMock = mockDeep<Navigator>({ language: 'en-GB' })
     vi.stubGlobal('navigator', navigatorMock)
@@ -106,7 +106,7 @@ describe('BrowseView', () => {
   })
 })
 
-const testCards = (firstCardCreatedAt: Date, secondCardCreatedAt: Date) => {
+const testCards = (firstCardCreatedAt: Date, secondCardCreatedAt: Date): CardWithEverything[] => {
   return [
     {
       id: '1',
@@ -148,7 +148,8 @@ const testCards = (firstCardCreatedAt: Date, secondCardCreatedAt: Date) => {
             id: '1',
             createdAt: new Date(),
             updatedAt: new Date(),
-            kana: 'ネコ'
+            kana: 'ネコ',
+            kanji: ''
           }
         ]
       }

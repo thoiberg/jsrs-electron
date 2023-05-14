@@ -21,7 +21,7 @@ export type CardWithEverything = Prisma.CardGetPayload<{
 
 export default async function searchCards(
   event: Event,
-  { query }: SearchCardsRequest
+  params?: SearchCardsRequest
 ): Promise<RPCResponse<CardWithEverything[]>> {
   const includeRelationshipsConfig = {
     englishCardSide: {
@@ -37,7 +37,7 @@ export default async function searchCards(
   }
 
   try {
-    if (query) {
+    if (params?.query) {
       const data = await prisma.card.findMany({
         where: {
           OR: [
@@ -46,7 +46,7 @@ export default async function searchCards(
                 japaneseAnswers: {
                   some: {
                     kana: {
-                      contains: query
+                      contains: params?.query
                     }
                   }
                 }
@@ -57,7 +57,7 @@ export default async function searchCards(
                 japaneseAnswers: {
                   some: {
                     kanji: {
-                      contains: query
+                      contains: params?.query
                     }
                   }
                 }
@@ -68,7 +68,7 @@ export default async function searchCards(
                 englishAnswers: {
                   some: {
                     answer: {
-                      contains: query
+                      contains: params?.query
                     }
                   }
                 }

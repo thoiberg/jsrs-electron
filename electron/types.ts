@@ -5,7 +5,7 @@ export interface CreateCardRequest {
 }
 
 export interface SearchCardsRequest {
-  query?: string
+  query: string
 }
 
 export interface RPCSuccessResponse<T> {

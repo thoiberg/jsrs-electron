@@ -13,5 +13,5 @@ export declare global {
 interface electronAPI {
   createCard: (params: CreateCardRequest) => RPCResponse<Card>
   getReviewableCards: () => RPCResponse<Card[]>
-  searchCards: (params: SearchCardsRequest) => RPCResponse<CardWithEverything[]>
+  searchCards: (params?: SearchCardsRequest) => RPCResponse<CardWithEverything[]>
 }

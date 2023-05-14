@@ -13,8 +13,8 @@
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
-    "format": "prettier --write \"{frontend,electron}/**/*.{vue,ts,css}\"",
-    "prettier-check": "prettier --check \"{frontend,electron}/**/*.{vue,ts,css}\"",
+    "format": "prettier --write \"{frontend,electron,prisma,utils}/**/*.{vue,ts,css}\"",
+    "prettier-check": "prettier --check \"{frontend,electron,prisma,utils}/**/*.{vue,ts,css}\"",
     "start": "NODE_ENV=development electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make"

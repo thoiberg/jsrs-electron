@@ -2,6 +2,7 @@
 
 import type { Card } from '@prisma/client'
 import type { CreateCardRequest, RPCResponse, SearchCardsRequest } from 'electron/types'
+import type { CardWithEverything } from 'prisma/queries/searchCards'
 
 export declare global {
   interface Window {
@@ -12,5 +13,5 @@ export declare global {
 interface electronAPI {
   createCard: (params: CreateCardRequest) => RPCResponse<Card>
   getReviewableCards: () => RPCResponse<Card[]>
-  searchCards: (params: SearchCardsRequest) => RPCResponse<Card[]>
+  searchCards: (params: SearchCardsRequest) => RPCResponse<CardWithEverything[]>
 }

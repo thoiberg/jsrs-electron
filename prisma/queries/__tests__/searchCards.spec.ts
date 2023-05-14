@@ -55,6 +55,18 @@ describe('searchCards', () => {
               }
             }
           ]
+        },
+        include: {
+          englishCardSide: {
+            include: {
+              englishAnswers: true
+            }
+          },
+          japaneseCardSide: {
+            include: {
+              japaneseAnswers: true
+            }
+          }
         }
       })
 
@@ -66,7 +78,20 @@ describe('searchCards', () => {
     it('returns all cards', async () => {
       await searchCards({} as Event, {})
 
-      expect(mockPrisma.card.findMany).toBeCalledWith()
+      expect(mockPrisma.card.findMany).toBeCalledWith({
+        include: {
+          englishCardSide: {
+            include: {
+              englishAnswers: true
+            }
+          },
+          japaneseCardSide: {
+            include: {
+              japaneseAnswers: true
+            }
+          }
+        }
+      })
     })
   })
 

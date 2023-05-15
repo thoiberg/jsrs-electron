@@ -33,13 +33,36 @@ describe('CardTable', () => {
     expect(secondCardData[2].text()).toContain('犬')
     expect(secondCardData[3].text()).toContain('29/12/2022')
   })
+
+  describe('when a row is clicked', () => {
+    it('emits the cardSelected event with the card id', async () => {
+      const data = testCards()
+
+      const navigatorMock = mockDeep<Navigator>({ language: 'en-GB' })
+      vi.stubGlobal('navigator', navigatorMock)
+
+      const wrapper = mount(CardTable, {
+        props: {
+          cards: data,
+        },
+      })
+
+      const firstCardRow = wrapper.findAll('tr')[0]
+      await firstCardRow.trigger('click')
+
+      const cardSelectedEvent = wrapper.emitted('cardSelected')
+
+      expect(cardSelectedEvent).toHaveLength(1)
+      expect(cardSelectedEvent![0]).toEqual(['1'])
+    })
+  })
 })
 
-const testCards = (firstCardCreatedAt: Date, secondCardCreatedAt: Date): CardWithEverything[] => {
+const testCards = (firstCardCreatedAt?: Date, secondCardCreatedAt?: Date): CardWithEverything[] => {
   return [
     {
       id: '1',
-      createdAt: firstCardCreatedAt,
+      createdAt: firstCardCreatedAt || new Date(),
       updatedAt: new Date(),
       englishCardSide: {
         id: '1',
@@ -85,7 +108,7 @@ const testCards = (firstCardCreatedAt: Date, secondCardCreatedAt: Date): CardWit
     },
     {
       id: '2',
-      createdAt: secondCardCreatedAt,
+      createdAt: secondCardCreatedAt || new Date(),
       updatedAt: new Date(),
       englishCardSide: {
         id: '2',

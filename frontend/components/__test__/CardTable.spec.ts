@@ -1,21 +1,35 @@
 import { mount } from '@vue/test-utils'
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { mockDeep } from 'vitest-mock-extended'
 import CardTable from '../CardTable.vue'
 import type { CardWithEverything } from 'prisma/queries/searchCards'
+import cardFactory from 'utils/factories/card'
 
 describe('CardTable', () => {
-  it('renders the cards in the table', async () => {
-    const firstCardCreatedAt = new Date('2023-05-14, 10:00:00')
-    const secondCardCreatedAt = new Date('2022-12-29, 15:13:00')
-    const data = testCards(firstCardCreatedAt, secondCardCreatedAt)
+  interface LocalTestContext {
+    cards: CardWithEverything[]
+  }
 
+  beforeEach<LocalTestContext>((context) => {
+    const catCard = cardFactory.build(
+      { id: '1', createdAt: new Date('2023-05-14, 10:00:00') },
+      { transient: { answers: [{ english: 'cat', kana: 'ねこ', kanji: '猫' }, { kana: 'ネコ' }] } },
+    )
+    const dogCard = cardFactory.build(
+      { createdAt: new Date('2022-12-29, 15:13:00') },
+      { transient: { answers: [{ english: 'dog', kana: 'いぬ', kanji: '犬' }] } },
+    )
+
+    context.cards = [catCard, dogCard]
+  })
+
+  it<LocalTestContext>('renders the cards in the table', async ({ cards }) => {
     const navigatorMock = mockDeep<Navigator>({ language: 'en-GB' })
     vi.stubGlobal('navigator', navigatorMock)
 
     const wrapper = mount(CardTable, {
       props: {
-        cards: data,
+        cards,
       },
     })
 
@@ -35,15 +49,13 @@ describe('CardTable', () => {
   })
 
   describe('when a row is clicked', () => {
-    it('emits the cardSelected event with the card id', async () => {
-      const data = testCards()
-
+    it<LocalTestContext>('emits the cardSelected event with the card id', async ({ cards }) => {
       const navigatorMock = mockDeep<Navigator>({ language: 'en-GB' })
       vi.stubGlobal('navigator', navigatorMock)
 
       const wrapper = mount(CardTable, {
         props: {
-          cards: data,
+          cards,
         },
       })
 
@@ -57,92 +69,3 @@ describe('CardTable', () => {
     })
   })
 })
-
-const testCards = (firstCardCreatedAt?: Date, secondCardCreatedAt?: Date): CardWithEverything[] => {
-  return [
-    {
-      id: '1',
-      createdAt: firstCardCreatedAt || new Date(),
-      updatedAt: new Date(),
-      englishCardSide: {
-        id: '1',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        nextReviewAt: new Date(),
-        cardId: '1',
-        englishAnswers: [
-          {
-            englishCardSideId: '1',
-            id: '1',
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            answer: 'cat',
-          },
-        ],
-      },
-      japaneseCardSide: {
-        id: '1',
-        cardId: '1',
-        nextReviewAt: new Date(),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        japaneseAnswers: [
-          {
-            japaneseCardSideId: '1',
-            id: '1',
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            kanji: '猫',
-            kana: 'ねこ',
-          },
-          {
-            japaneseCardSideId: '2',
-            id: '1',
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            kana: 'ネコ',
-            kanji: '',
-          },
-        ],
-      },
-    },
-    {
-      id: '2',
-      createdAt: secondCardCreatedAt || new Date(),
-      updatedAt: new Date(),
-      englishCardSide: {
-        id: '2',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        nextReviewAt: new Date(),
-        cardId: '2',
-        englishAnswers: [
-          {
-            englishCardSideId: '2',
-            id: '2',
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            answer: 'dog',
-          },
-        ],
-      },
-      japaneseCardSide: {
-        id: '2',
-        cardId: '2',
-        nextReviewAt: new Date(),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        japaneseAnswers: [
-          {
-            japaneseCardSideId: '2',
-            id: '2',
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            kanji: '犬',
-            kana: 'いぬ',
-          },
-        ],
-      },
-    },
-  ]
-}

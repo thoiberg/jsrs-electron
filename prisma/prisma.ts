@@ -73,7 +73,7 @@ function getDbUrl() {
   if (isDev) {
     return process.env.DATABASE_URL
   } else if (isTest) {
-    return 'file:../test.db?socket_timeout=200&connection_limit=1'
+    return 'file:../test.db?connection_limit=1'
   } else {
     const dbPath = path.join(app.getPath('userData'), 'app.db')
     return 'file:' + dbPath

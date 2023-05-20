@@ -1,50 +1,64 @@
-import { describe, it, vi, expect } from 'vitest'
+import { describe, it, expect, beforeEach } from 'vitest'
 import updateCard from '../updateCard'
-import { prisma as mockPrisma } from '../../__mocks__/prisma'
 import type { Event } from 'electron'
 import cardFactory from 'utils/factories/card'
-
-vi.mock('../../prisma.ts')
+import { prisma } from 'prisma/prisma'
+import resetDatabase from 'utils/testHelpers/resetDatabase'
+import { includeAllCardRelationships } from '../searchCards'
 
 describe('updateCard', () => {
   const electronEvent = {} as Event
 
   describe('when japaneseAnswers are supplied', () => {
+    beforeEach(async () => {
+      await resetDatabase()
+    })
+
     describe('and the answer exists', () => {
       it('updates the existing answer', async () => {
-        const params = {
-          cardId: '1',
-          japaneseAnswers: [{ japaneseAnswerId: '2', kana: 'いぬ' }],
-        }
-        await updateCard(electronEvent, params)
+        const card = await createCard('dog', 'イヌ', '犬')
+        const japaneseAnswerId = card.japaneseCardSide?.japaneseAnswers[0].id!
 
-        expect(mockPrisma.japaneseAnswer.update).toBeCalledWith({
+        const params = {
+          cardId: card.id,
+          japaneseAnswers: [{ japaneseAnswerId, kana: 'いぬ' }],
+        }
+
+        const response = await updateCard(electronEvent, params)
+
+        expect(response).toHaveProperty('data')
+
+        const changedAnswer = await prisma.japaneseAnswer.findMany({
           where: {
-            id: '2',
-          },
-          data: {
-            kana: 'いぬ',
-            kanji: undefined,
+            id: japaneseAnswerId,
           },
         })
+
+        expect(changedAnswer.length).toEqual(1)
+        expect(changedAnswer[0].kana).toEqual('いぬ')
       })
     })
 
     describe("and the answer doesn't exist", () => {
       it('creates a new answer', async () => {
-        const params = {
-          cardId: '1',
-          japaneseAnswers: [{ japaneseCardSideId: '2', kana: 'いぬ' }],
-        }
-        await updateCard(electronEvent, params)
+        const card = await createCard('dog', 'イヌ', '犬')
+        const japaneseCardSideId = card.japaneseCardSide!.id
 
-        expect(mockPrisma.japaneseAnswer.create).toBeCalledWith({
-          data: {
-            japaneseCardSideId: '2',
-            kana: 'いぬ',
-            kanji: undefined,
+        const params = {
+          cardId: card.id,
+          japaneseAnswers: [{ japaneseCardSideId, kana: 'ポチ' }],
+        }
+        const response = await updateCard(electronEvent, params)
+        expect(response).toHaveProperty('data')
+
+        const answers = await prisma.japaneseAnswer.findMany({
+          where: {
+            japaneseCardSideId,
           },
         })
+
+        expect(answers.length).toEqual(2)
+        expect(answers[1].kana).toEqual('ポチ')
       })
     })
   })
@@ -52,50 +66,77 @@ describe('updateCard', () => {
   describe('when englishAnswers are supplied', () => {
     describe('and the answer exists', () => {
       it('updates the answer', async () => {
-        const params = {
-          cardId: '1',
-          englishAnswers: [{ englishAnswerId: '2', answer: 'dog' }],
-        }
-        await updateCard(electronEvent, params)
+        const card = await createCard('dog', 'イヌ', '犬')
+        const englishAnswerId = card.englishCardSide?.englishAnswers[0].id!
 
-        expect(mockPrisma.englishAnswer.update).toBeCalledWith({
+        const params = {
+          cardId: card.id,
+          englishAnswers: [{ englishAnswerId, answer: 'pupper' }],
+        }
+
+        const response = await updateCard(electronEvent, params)
+
+        expect(response).toHaveProperty('data')
+
+        const changedAnswer = await prisma.englishAnswer.findMany({
           where: {
-            id: '2',
-          },
-          data: {
-            answer: 'dog',
+            id: englishAnswerId,
           },
         })
+
+        expect(changedAnswer.length).toEqual(1)
+        expect(changedAnswer[0].answer).toEqual('pupper')
       })
     })
 
     describe("and the answer doesn't exist", () => {
       it('create a new answer', async () => {
-        const params = {
-          cardId: '1',
-          englishAnswers: [{ englishCardSideId: '2', answer: 'dog' }],
-        }
-        await updateCard(electronEvent, params)
+        const card = await createCard('dog', 'イヌ', '犬')
+        const englishCardSideId = card.englishCardSide!.id
 
-        expect(mockPrisma.englishAnswer.create).toBeCalledWith({
-          data: {
-            englishCardSideId: '2',
-            answer: 'dog',
+        const params = {
+          cardId: card.id,
+          englishAnswers: [{ englishCardSideId, answer: 'pupper' }],
+        }
+        const response = await updateCard(electronEvent, params)
+        expect(response).toHaveProperty('data')
+
+        const answers = await prisma.englishAnswer.findMany({
+          where: {
+            englishCardSideId,
           },
         })
+
+        expect(answers.length).toEqual(2)
+        expect(answers[1].answer).toEqual('pupper')
       })
     })
   })
-
-  it('returns the card as a RPCResponse object', async () => {
-    const params = {
-      cardId: '1',
-    }
-    const card = cardFactory.build()
-    mockPrisma.card.findUnique.mockResolvedValue(card)
-
-    const resp = await updateCard(electronEvent, params)
-
-    expect(resp).toEqual({ data: card })
-  })
 })
+
+async function createCard(english: string, kana?: string, kanji?: string) {
+  return await prisma.card.create({
+    data: {
+      japaneseCardSide: {
+        create: {
+          japaneseAnswers: {
+            create: {
+              kana,
+              kanji,
+            },
+          },
+        },
+      },
+      englishCardSide: {
+        create: {
+          englishAnswers: {
+            create: {
+              answer: english,
+            },
+          },
+        },
+      },
+    },
+    include: includeAllCardRelationships,
+  })
+}

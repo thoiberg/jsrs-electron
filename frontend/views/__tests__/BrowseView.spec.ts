@@ -6,6 +6,7 @@ import CardTable from '@/components/CardTable.vue'
 import type { CardWithEverything } from 'prisma/queries/searchCards'
 import CardForm from '@/components/CardForm.vue'
 import cardFactory from 'utils/factories/card'
+import { ref } from 'vue'
 
 describe('BrowseView', () => {
   describe('when mounting', () => {
@@ -119,7 +120,46 @@ describe('BrowseView', () => {
       wrapper.findComponent(CardTable).vm.$emit('cardSelected', '12')
       await wrapper.vm.$nextTick()
 
-      expect(wrapper.findComponent(CardForm).exists()).toBe(true)
+      const cardFormComponent = wrapper.findComponent(CardForm)
+      expect(cardFormComponent.exists()).toBe(true)
+      expect(cardFormComponent.props()).toEqual({
+        card,
+        submitText: 'Update',
+        onSubmit: (wrapper.vm as any).onSubmit,
+      })
+    })
+  })
+
+  describe('when the onSubmit handler is fired', () => {
+    it('calls the electron updateCard API', async () => {
+      const electronApiMock = mockElectronApi()
+
+      const card = cardFactory.build({
+        id: '12',
+      })
+      electronApiMock.searchCards.mockImplementation(() => {
+        return { data: [card] }
+      })
+      electronApiMock.updateCard.mockResolvedValue({ data: card })
+
+      const wrapper = mount(BrowseCardView)
+      await flushPromises()
+      wrapper.findComponent(CardTable).vm.$emit('cardSelected', '12')
+      await wrapper.vm.$nextTick()
+
+      const submitParams = {
+        english: ref('cat'),
+        kana: ref('ねこ'),
+        kanji: ref('猫'),
+      }
+
+      wrapper.vm.onSubmit(submitParams)
+
+      expect(electronApiMock.updateCard).toBeCalledWith({
+        cardId: '12',
+        englishAnswers: [{ answer: 'cat', englishAnswerId: '2' }],
+        japaneseAnswers: [{ japaneseAnswerId: '2', kana: 'ねこ', kanji: '猫' }],
+      })
     })
   })
 })

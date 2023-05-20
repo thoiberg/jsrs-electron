@@ -107,7 +107,7 @@ describe('CardForm', () => {
   })
 
   describe('when the data is valid', () => {
-    it.only('calls the onSubmit handler', async () => {
+    it('calls the onSubmit handler', async () => {
       const onSubmitSpy = vi.fn()
       const wrapper = mount(CardForm, { props: { submitText: 'Create', onSubmit: onSubmitSpy } })
 

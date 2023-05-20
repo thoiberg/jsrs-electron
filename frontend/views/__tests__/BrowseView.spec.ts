@@ -1,9 +1,12 @@
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { flushPromises, mount } from '@vue/test-utils'
 import BrowseCardView from '../BrowseCardView.vue'
 import mockElectronApi from '../__mocks__/electronApi'
+import CardTable from '@/components/CardTable.vue'
 import type { CardWithEverything } from 'prisma/queries/searchCards'
-import { mockDeep } from 'vitest-mock-extended'
+import CardForm from '@/components/CardForm.vue'
+import cardFactory from 'utils/factories/card'
+import { ref } from 'vue'
 
 describe('BrowseView', () => {
   describe('when mounting', () => {
@@ -21,35 +24,21 @@ describe('BrowseView', () => {
     })
   })
 
-  it('renders the cards in the table', async () => {
-    const firstCardCreatedAt = new Date('2023-05-14, 10:00:00')
-    const secondCardCreatedAt = new Date('2022-12-29, 15:13:00')
-    const data = testCards(firstCardCreatedAt, secondCardCreatedAt)
-
-    const navigatorMock = mockDeep<Navigator>({ language: 'en-GB' })
-    vi.stubGlobal('navigator', navigatorMock)
-
+  it('renders the card table with the cards', async () => {
     const electronApiMock = mockElectronApi()
+
+    const cards: CardWithEverything[] = []
+
     electronApiMock.searchCards.mockImplementation(() => {
-      return { data }
+      return { data: cards }
     })
 
     const wrapper = mount(BrowseCardView)
     await flushPromises()
 
-    const rows = wrapper.findAll('tr')
-
-    const firstCardData = rows[0].findAll('td')
-    expect(firstCardData[0].text()).toContain('cat')
-    expect(firstCardData[1].text()).toContain('ねこ,ネコ')
-    expect(firstCardData[2].text()).toContain('猫')
-    expect(firstCardData[3].text()).toContain('14/05/2023')
-
-    const secondCardData = rows[1].findAll('td')
-    expect(secondCardData[0].text()).toContain('dog')
-    expect(secondCardData[1].text()).toContain('いぬ')
-    expect(secondCardData[2].text()).toContain('犬')
-    expect(secondCardData[3].text()).toContain('29/12/2022')
+    const cardTable = wrapper.getComponent(CardTable)
+    expect(cardTable.isVisible()).toEqual(true)
+    expect(cardTable.props()).toEqual({ cards })
   })
 
   describe('when entering a search query', () => {
@@ -104,93 +93,74 @@ describe('BrowseView', () => {
       expect(wrapper.find('.error-message').text()).toEqual('oh no')
     })
   })
-})
 
-const testCards = (firstCardCreatedAt: Date, secondCardCreatedAt: Date): CardWithEverything[] => {
-  return [
-    {
-      id: '1',
-      createdAt: firstCardCreatedAt,
-      updatedAt: new Date(),
-      englishCardSide: {
-        id: '1',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        nextReviewAt: new Date(),
-        cardId: '1',
-        englishAnswers: [
-          {
-            englishCardSideId: '1',
-            id: '1',
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            answer: 'cat',
-          },
-        ],
-      },
-      japaneseCardSide: {
-        id: '1',
-        cardId: '1',
-        nextReviewAt: new Date(),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        japaneseAnswers: [
-          {
-            japaneseCardSideId: '1',
-            id: '1',
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            kanji: '猫',
-            kana: 'ねこ',
-          },
-          {
-            japaneseCardSideId: '2',
-            id: '1',
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            kana: 'ネコ',
-            kanji: '',
-          },
-        ],
-      },
-    },
-    {
-      id: '2',
-      createdAt: secondCardCreatedAt,
-      updatedAt: new Date(),
-      englishCardSide: {
-        id: '2',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        nextReviewAt: new Date(),
-        cardId: '2',
-        englishAnswers: [
-          {
-            englishCardSideId: '2',
-            id: '2',
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            answer: 'dog',
-          },
-        ],
-      },
-      japaneseCardSide: {
-        id: '2',
-        cardId: '2',
-        nextReviewAt: new Date(),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        japaneseAnswers: [
-          {
-            japaneseCardSideId: '2',
-            id: '2',
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            kanji: '犬',
-            kana: 'いぬ',
-          },
-        ],
-      },
-    },
-  ]
-}
+  describe('when a card is not selected', () => {
+    it('does not show the card form', async () => {
+      const wrapper = mount(BrowseCardView)
+
+      expect(wrapper.findComponent(CardForm).exists()).toBe(false)
+    })
+  })
+
+  describe('when a card is selected', () => {
+    it('shows the card form', async () => {
+      const electronApiMock = mockElectronApi()
+
+      const card = cardFactory.build({
+        id: '12',
+      })
+
+      electronApiMock.searchCards.mockImplementation(() => {
+        return { data: [card] }
+      })
+
+      const wrapper = mount(BrowseCardView)
+      await flushPromises()
+
+      wrapper.findComponent(CardTable).vm.$emit('cardSelected', '12')
+      await wrapper.vm.$nextTick()
+
+      const cardFormComponent = wrapper.findComponent(CardForm)
+      expect(cardFormComponent.exists()).toBe(true)
+      expect(cardFormComponent.props()).toEqual({
+        card,
+        submitText: 'Update',
+        onSubmit: (wrapper.vm as any).onSubmit,
+      })
+    })
+  })
+
+  describe('when the onSubmit handler is fired', () => {
+    it('calls the electron updateCard API', async () => {
+      const electronApiMock = mockElectronApi()
+
+      const card = cardFactory.build({
+        id: '12',
+      })
+      electronApiMock.searchCards.mockImplementation(() => {
+        return { data: [card] }
+      })
+      electronApiMock.updateCard.mockResolvedValue({ data: card })
+
+      const wrapper = mount(BrowseCardView)
+      await flushPromises()
+      wrapper.findComponent(CardTable).vm.$emit('cardSelected', '12')
+      await wrapper.vm.$nextTick()
+
+      const submitParams = {
+        english: ref('cat'),
+        kana: ref('ねこ'),
+        kanji: ref('猫'),
+      }
+
+      // @ts-ignore
+      wrapper.vm.onSubmit(submitParams)
+
+      expect(electronApiMock.updateCard).toBeCalledWith({
+        cardId: '12',
+        englishAnswers: [{ answer: 'cat', englishAnswerId: '2' }],
+        japaneseAnswers: [{ japaneseAnswerId: '2', kana: 'ねこ', kanji: '猫' }],
+      })
+    })
+  })
+})

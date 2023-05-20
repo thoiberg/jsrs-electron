@@ -19,23 +19,23 @@ export type CardWithEverything = Prisma.CardGetPayload<{
   }
 }>
 
+export const includeAllCardRelationships = {
+  englishCardSide: {
+    include: {
+      englishAnswers: true,
+    },
+  },
+  japaneseCardSide: {
+    include: {
+      japaneseAnswers: true,
+    },
+  },
+}
+
 export default async function searchCards(
   event: Event,
   params?: SearchCardsRequest,
 ): Promise<RPCResponse<CardWithEverything[]>> {
-  const includeRelationshipsConfig = {
-    englishCardSide: {
-      include: {
-        englishAnswers: true,
-      },
-    },
-    japaneseCardSide: {
-      include: {
-        japaneseAnswers: true,
-      },
-    },
-  }
-
   try {
     if (params?.query) {
       const data = await prisma.card.findMany({
@@ -76,7 +76,7 @@ export default async function searchCards(
             },
           ],
         },
-        include: includeRelationshipsConfig,
+        include: includeAllCardRelationships,
       })
 
       // TODO: investigate and remove dupes if necessary
@@ -84,7 +84,7 @@ export default async function searchCards(
       return { data }
     } else {
       const data = await prisma.card.findMany({
-        include: includeRelationshipsConfig,
+        include: includeAllCardRelationships,
       })
 
       return { data }

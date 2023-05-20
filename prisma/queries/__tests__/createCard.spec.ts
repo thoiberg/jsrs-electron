@@ -1,47 +1,59 @@
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import createCard from '../createCard'
 import type { Event } from 'electron'
-import { prisma as mockPrisma } from '../../__mocks__/prisma'
-
-vi.mock('../../prisma.ts')
+import { prisma } from '../../prisma'
+import { includeAllCardRelationships } from '../searchCards'
+import resetDatabase from 'utils/testHelpers/resetDatabase'
 
 describe('createCardQuery', () => {
   describe('when the request succeeds', async () => {
-    it('returns the card', async () => {
-      const card = {
-        id: '1',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      }
-      mockPrisma.card.create.mockResolvedValue(card)
+    beforeEach(async () => {
+      await resetDatabase()
+    })
 
+    it('returns the card', async () => {
       const response = await createCard({} as Event, {
         english: 'cat',
         kana: 'ねこ',
         kanji: '猫',
       })
 
-      expect(response.data).toEqual(card)
+      expect(response.data).toBeDefined()
+
+      const cardFromDb = await prisma.card.findUnique({
+        where: { id: response.data!.id },
+        include: includeAllCardRelationships,
+      })
+
+      expect(cardFromDb?.englishCardSide?.englishAnswers[0].answer).toEqual('cat')
+      expect(cardFromDb?.japaneseCardSide?.japaneseAnswers[0].kana).toEqual('ねこ')
+      expect(cardFromDb?.japaneseCardSide?.japaneseAnswers[0].kanji).toEqual('猫')
     })
   })
 
   describe('when the request fails', () => {
-    describe('with an error object', () => {
-      it('returns as error', async () => {
-        const returnedError = new Error('oh no')
+    beforeEach(() => {
+      vi.doMock('../../prisma.ts')
+      vi.resetModules()
+    })
 
-        mockPrisma.card.create.mockImplementation(() => {
-          throw returnedError
-        })
+    it('returns as error', async () => {
+      const { prisma: mockPrisma } = await import('../../__mocks__/prisma')
+      const { default: mockedCreateCard } = await import('../createCard')
 
-        const response = await createCard({} as Event, {
-          english: 'cat',
-          kana: 'ねこ',
-          kanji: '猫',
-        })
+      const returnedError = new Error('oh no')
 
-        expect(response.error).toEqual(returnedError)
+      mockPrisma.card.create.mockImplementation(() => {
+        throw returnedError
       })
+
+      const response = await mockedCreateCard({} as Event, {
+        english: 'cat',
+        kana: 'ねこ',
+        kanji: '猫',
+      })
+
+      expect(response).toEqual({ error: returnedError })
     })
   })
 })

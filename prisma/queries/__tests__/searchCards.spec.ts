@@ -2,14 +2,11 @@ import { describe, expect, it, beforeEach, vi } from 'vitest'
 
 import searchCards, { includeAllCardRelationships } from '../searchCards'
 import { prisma } from '../../prisma'
+import resetDatabase from 'utils/testHelpers/resetDatabase'
 
 describe('searchCards', () => {
   beforeEach(async () => {
-    await prisma.$executeRawUnsafe('DELETE FROM EnglishAnswer;')
-    await prisma.$executeRawUnsafe('DELETE FROM JapaneseAnswer;')
-    await prisma.$executeRawUnsafe('DELETE FROM JapaneseCardSide;')
-    await prisma.$executeRawUnsafe('DELETE FROM EnglishCardSide;')
-    await prisma.$executeRawUnsafe('DELETE FROM Card;')
+    await resetDatabase()
   })
 
   describe('when a query is supplied', () => {

@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { describe, it, vi, expect } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import CardForm from '../CardForm.vue'
 import cardFactory from 'utils/factories/card'
 

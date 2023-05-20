@@ -153,6 +153,7 @@ describe('BrowseView', () => {
         kanji: ref('猫'),
       }
 
+      // @ts-ignore
       wrapper.vm.onSubmit(submitParams)
 
       expect(electronApiMock.updateCard).toBeCalledWith({

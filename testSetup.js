@@ -11,7 +11,10 @@ if (!dbExists) {
   fs.closeSync(fs.openSync(dbPath, 'w'))
 }
 
-exec('DATABASE_URL=file:../test.db npx prisma migrate reset --force', (stdout, stderr) => {
-  console.log('stdout:', stdout)
-  console.log('stderr:', stderr)
-})
+exec(
+  'DATABASE_URL=file:../test.db npx prisma migrate reset --force --skip-seed',
+  (stdout, stderr) => {
+    console.log('stdout:', stdout)
+    console.log('stderr:', stderr)
+  },
+)

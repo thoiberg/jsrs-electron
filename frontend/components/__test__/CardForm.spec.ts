@@ -80,7 +80,7 @@ describe('CardForm', () => {
 
       await wrapper.get('form').trigger('submit.prevent')
 
-      expect(wrapper.emitted()).not.toHaveProperty('onSubmit')
+      expect(wrapper.emitted()).not.toHaveProperty('submit')
     })
   })
 
@@ -98,12 +98,12 @@ describe('CardForm', () => {
 
       await wrapper.get('form').trigger('submit.prevent')
 
-      expect(wrapper.emitted()).not.toHaveProperty('onSubmit')
+      expect(wrapper.emitted()).not.toHaveProperty('submit')
     })
   })
 
   describe('when the data is valid', () => {
-    it('calls the onSubmit handler', async () => {
+    it('emits the submit event', async () => {
       const wrapper = mount(CardForm, { props: { submitText: 'Create' } })
 
       await wrapper.get('input[name=englishAnswer]').setValue('cat')
@@ -113,7 +113,7 @@ describe('CardForm', () => {
 
       // TODO: Check args passed in
       // (currently passing in the refs which I can't figure out how to get through test-utils)
-      expect(wrapper.emitted()).toHaveProperty('onSubmit')
+      expect(wrapper.emitted()).toHaveProperty('submit')
     })
   })
 })

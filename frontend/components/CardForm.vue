@@ -43,7 +43,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'onSubmit', params: SubmitParams): void
+  (e: 'submit', params: SubmitParams): void
 }>()
 
 // TODO: track more complex objects, so I can record the answer Id and whether they've been updated
@@ -65,7 +65,7 @@ let showSuccessMessage = ref(false)
 
 function submit() {
   if (isValid()) {
-    emit('onSubmit', { kana, kanji, english })
+    emit('submit', { kana, kanji, english })
   }
 }
 

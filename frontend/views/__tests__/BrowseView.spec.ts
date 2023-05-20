@@ -151,7 +151,7 @@ describe('BrowseView', () => {
         kana: ref('ねこ'),
         kanji: ref('猫'),
       }
-      wrapper.findComponent(CardForm).vm.$emit('onSubmit', submitParams)
+      wrapper.findComponent(CardForm).vm.$emit('submit', submitParams)
       await flushPromises()
 
       expect(electronApiMock.updateCard).toBeCalledWith({

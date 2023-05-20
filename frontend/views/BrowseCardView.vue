@@ -2,7 +2,7 @@
   <p class="error-message" v-if="serverError">{{ serverError }}</p>
   <input type="text" placeholder="Search" @input="onSearchInput" />
   <CardTable :cards="cards" @card-selected="onCardSelect" />
-  <CardForm v-if="selectedCard" :card="selectedCard" submit-text="Update" @on-submit="onSubmit" />
+  <CardForm v-if="selectedCard" :card="selectedCard" submit-text="Update" @submit="onSubmit" />
 </template>
 
 <script setup lang="ts">

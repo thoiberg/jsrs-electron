@@ -32,7 +32,7 @@ model JapaneseAnswer {
   createdAt          DateTime         @default(now())
   updatedAt          DateTime         @updatedAt
   japaneseCardSide   JapaneseCardSide @relation(fields: [japaneseCardSideId], references: [id])
-  japaneseCardSideId String           @unique
+  japaneseCardSideId String
 }
 
 model EnglishCardSide {
@@ -51,5 +51,5 @@ model EnglishAnswer {
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
   englishCardSide   EnglishCardSide @relation(fields: [englishCardSideId], references: [id])
-  englishCardSideId String          @unique
+  englishCardSideId String
 }

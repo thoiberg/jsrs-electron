@@ -32,7 +32,10 @@ dev.db
 # test SQLite db file
 test.db
 
+# SQLite artefacts
 *.db-journal
+*.db-shm
+*.db-wal
 
 # electron forge output
 out/

@@ -5,14 +5,14 @@ import cardFactory from 'utils/factories/card'
 
 describe('CardForm', () => {
   it('renders the submitText on the submit button', () => {
-    const wrapper = mount(CardForm, { props: { submitText: 'Create', onSubmit: vi.fn() } })
+    const wrapper = mount(CardForm, { props: { submitText: 'Create' } })
 
     expect(wrapper.find('button[type=submit]').text()).toEqual('Create')
   })
 
   describe('when no card is supplied', () => {
     it('sets the inputs to nothing', () => {
-      const wrapper = mount(CardForm, { props: { submitText: 'Create', onSubmit: vi.fn() } })
+      const wrapper = mount(CardForm, { props: { submitText: 'Create' } })
 
       expect((wrapper.find('input[name=englishAnswer]').element as HTMLInputElement).value).toEqual(
         '',
@@ -32,7 +32,7 @@ describe('CardForm', () => {
         {},
         { transient: { answers: [{ english: 'cat', kana: 'ねこ', kanji: '猫' }] } },
       )
-      const wrapper = mount(CardForm, { props: { submitText: 'Update', onSubmit: vi.fn(), card } })
+      const wrapper = mount(CardForm, { props: { submitText: 'Update', card } })
 
       expect((wrapper.find('input[name=englishAnswer]').element as HTMLInputElement).value).toEqual(
         'cat',
@@ -52,13 +52,13 @@ describe('CardForm', () => {
         {},
         { transient: { answers: [{ english: 'cat', kana: 'ねこ', kanji: '猫' }] } },
       )
-      const wrapper = mount(CardForm, { props: { submitText: 'Update', onSubmit: vi.fn() } })
+      const wrapper = mount(CardForm, { props: { submitText: 'Update' } })
 
       expect((wrapper.find('input[name=englishAnswer]').element as HTMLInputElement).value).toEqual(
         '',
       )
 
-      await wrapper.setProps({ card, onSubmit: vi.fn(), submitText: 'Update' })
+      await wrapper.setProps({ card, submitText: 'Update' })
 
       expect((wrapper.find('input[name=englishAnswer]').element as HTMLInputElement).value).toEqual(
         'cat',
@@ -68,8 +68,7 @@ describe('CardForm', () => {
 
   describe('when the english answer is missing', () => {
     it('shows an error message', async () => {
-      const onSubmitSpy = vi.fn()
-      const wrapper = mount(CardForm, { props: { submitText: 'Create', onSubmit: onSubmitSpy } })
+      const wrapper = mount(CardForm, { props: { submitText: 'Create' } })
 
       await wrapper.get('form').trigger('submit.prevent')
 
@@ -77,19 +76,17 @@ describe('CardForm', () => {
     })
 
     it('does not attempt to create the card', async () => {
-      const onSubmitSpy = vi.fn()
-      const wrapper = mount(CardForm, { props: { submitText: 'Create', onSubmit: onSubmitSpy } })
+      const wrapper = mount(CardForm, { props: { submitText: 'Create' } })
 
       await wrapper.get('form').trigger('submit.prevent')
 
-      expect(onSubmitSpy).not.toBeCalled()
+      expect(wrapper.emitted()).not.toHaveProperty('onSubmit')
     })
   })
 
   describe('when the kana answer and kanji answer are missing', () => {
     it('shows an error message', async () => {
-      const onSubmitSpy = vi.fn()
-      const wrapper = mount(CardForm, { props: { submitText: 'Create', onSubmit: onSubmitSpy } })
+      const wrapper = mount(CardForm, { props: { submitText: 'Create' } })
 
       await wrapper.get('form').trigger('submit.prevent')
 
@@ -97,19 +94,17 @@ describe('CardForm', () => {
     })
 
     it('does not attempt to create the card', async () => {
-      const onSubmitSpy = vi.fn()
-      const wrapper = mount(CardForm, { props: { submitText: 'Create', onSubmit: onSubmitSpy } })
+      const wrapper = mount(CardForm, { props: { submitText: 'Create' } })
 
       await wrapper.get('form').trigger('submit.prevent')
 
-      expect(onSubmitSpy).not.toBeCalled()
+      expect(wrapper.emitted()).not.toHaveProperty('onSubmit')
     })
   })
 
   describe('when the data is valid', () => {
     it('calls the onSubmit handler', async () => {
-      const onSubmitSpy = vi.fn()
-      const wrapper = mount(CardForm, { props: { submitText: 'Create', onSubmit: onSubmitSpy } })
+      const wrapper = mount(CardForm, { props: { submitText: 'Create' } })
 
       await wrapper.get('input[name=englishAnswer]').setValue('cat')
       await wrapper.get('input[name=japaneseKanaAnswer]').setValue('ねこ')
@@ -118,7 +113,7 @@ describe('CardForm', () => {
 
       // TODO: Check args passed in
       // (currently passing in the refs which I can't figure out how to get through test-utils)
-      expect(onSubmitSpy).toBeCalled()
+      expect(wrapper.emitted()).toHaveProperty('onSubmit')
     })
   })
 })

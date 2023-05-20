@@ -40,7 +40,10 @@ export type SubmitParams = {
 const props = defineProps<{
   card?: CardWithEverything
   submitText: string
-  onSubmit: (params: SubmitParams) => void
+}>()
+
+const emit = defineEmits<{
+  (e: 'onSubmit', params: SubmitParams): void
 }>()
 
 // TODO: track more complex objects, so I can record the answer Id and whether they've been updated
@@ -62,7 +65,7 @@ let showSuccessMessage = ref(false)
 
 function submit() {
   if (isValid()) {
-    props.onSubmit({ kana, kanji, english })
+    emit('onSubmit', { kana, kanji, english })
   }
 }
 

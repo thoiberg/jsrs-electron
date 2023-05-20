@@ -125,12 +125,11 @@ describe('BrowseView', () => {
       expect(cardFormComponent.props()).toEqual({
         card,
         submitText: 'Update',
-        onSubmit: (wrapper.vm as any).onSubmit,
       })
     })
   })
 
-  describe('when the onSubmit handler is fired', () => {
+  describe('when the onSubmit event is emitted', () => {
     it('calls the electron updateCard API', async () => {
       const electronApiMock = mockElectronApi()
 
@@ -152,9 +151,8 @@ describe('BrowseView', () => {
         kana: ref('ねこ'),
         kanji: ref('猫'),
       }
-
-      // @ts-ignore
-      wrapper.vm.onSubmit(submitParams)
+      wrapper.findComponent(CardForm).vm.$emit('onSubmit', submitParams)
+      await flushPromises()
 
       expect(electronApiMock.updateCard).toBeCalledWith({
         cardId: '12',

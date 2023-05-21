@@ -8,11 +8,11 @@ import { includeAllCardRelationships } from '../searchCards'
 describe('updateCard', () => {
   const electronEvent = {} as Event
 
-  describe('when japaneseAnswers are supplied', () => {
-    beforeEach(async () => {
-      await resetDatabase()
-    })
+  beforeEach(async () => {
+    await resetDatabase()
+  })
 
+  describe('when japaneseAnswers are supplied', () => {
     describe('and the answer exists', () => {
       it('updates the existing answer', async () => {
         const card = await createCard('dog', 'イヌ', '犬')

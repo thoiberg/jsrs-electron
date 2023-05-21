@@ -15,7 +15,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore --max-warnings=0",
     "format": "prettier --write \"{frontend,electron,prisma,utils}/**/*.{vue,ts,css}\"",
     "prettier-check": "prettier --check \"{frontend,electron,prisma,utils}/**/*.{vue,ts,css}\"",
-    "start": "NODE_ENV=development electron-forge start",
+    "start": "NODE_ENV=development electron-forge start --inspect-electron",
     "package": "electron-forge package",
     "make": "electron-forge make"
   },

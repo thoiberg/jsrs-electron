@@ -1,6 +1,8 @@
-import electron, { app, ipcMain } from 'electron'
+import electron, { app, ipcMain, session } from 'electron'
 import process from 'process'
 import path from 'path'
+import os from 'os'
+import fs from 'fs'
 
 import { setupDb } from '../prisma/prisma'
 import { createCard, getReviewableCards, searchCards, updateCard } from '../prisma/queries'
@@ -44,8 +46,10 @@ function createWindow() {
   ipcMain.handle('update-card', updateCard)
 }
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   createWindow()
+
+  await loadVueDevToolsExtension()
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
@@ -61,3 +65,23 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 })
+
+const loadVueDevToolsExtension = async () => {
+  // TODO: Investigate whether I can download the extension from the store
+  // directly, instead of having to have chrome and the particular extension
+  // installed.
+  const VUE_DEV_TOOLS_VERSION = '6.5.0_0'
+  const VUE_DEV_TOOLS_EXTENSION_ID = 'nhdogjmejiglipccpnnnanhbledajbpd'
+  const vueDevToolsPath = path.join(
+    os.homedir(),
+    `Library/Application Support/Google/Chrome/Default/Extensions/${VUE_DEV_TOOLS_EXTENSION_ID}/${VUE_DEV_TOOLS_VERSION}`,
+  )
+
+  if (fs.existsSync(vueDevToolsPath)) {
+    await session.defaultSession.loadExtension(vueDevToolsPath)
+  } else {
+    console.log(
+      '[WARN] VueDevTools extension not found, check out https://www.electronjs.org/docs/latest/tutorial/devtools-extension for instructions on how to install',
+    )
+  }
+}

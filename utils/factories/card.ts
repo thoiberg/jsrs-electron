@@ -2,6 +2,7 @@ import { Factory } from 'fishery'
 import type { CardWithEverything } from '../../prisma/queries/searchCards'
 import japaneseCardSideFactory from './japaneseCardSide'
 import englishCardSideFactory from './englishCardSide'
+import { CardStatus } from '../../prisma/card'
 
 type CardTransientParams = {
   answers?: { kana?: string; kanji?: string; english?: string }[]
@@ -39,6 +40,7 @@ const cardFactory = Factory.define<CardWithEverything, CardTransientParams>(
       id,
       createdAt: new Date(),
       updatedAt: new Date(),
+      status: CardStatus.ACTIVE,
       japaneseCardSide:
         associations.japaneseCardSide ||
         japaneseCardSide ||

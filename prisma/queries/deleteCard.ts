@@ -1,7 +1,7 @@
 import type { RPCResponse } from 'electron/types'
 import errorProcessing from './utils/errorProcessing'
 import { prisma } from '../prisma'
-import { CardStatus } from 'prisma/card'
+import { CardStatus } from '../card'
 
 export default async function deleteCard(
   event: Event,

@@ -3,6 +3,7 @@ import { describe, expect, it, vi, beforeEach } from 'vitest'
 import HomeView from '../HomeView.vue'
 import { mockDeep, type DeepMockProxy } from 'vitest-mock-extended'
 import type { electronAPI } from 'env'
+import cardFactory from 'utils/factories/card'
 
 describe('HomeView', () => {
   interface LocalTestContext {
@@ -17,21 +18,9 @@ describe('HomeView', () => {
 
   describe('when the data is retrieved successfully', () => {
     it<LocalTestContext>('shows the number of reviewable cards', async ({ electronApi }) => {
-      const firstCard = {
-        id: '1',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      }
-      const secondCard = {
-        id: '2',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      }
-      const thirdCard = {
-        id: '3',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      }
+      const firstCard = cardFactory.build()
+      const secondCard = cardFactory.build()
+      const thirdCard = cardFactory.build()
 
       const getReviewableCardsMock = vi.fn(() => {
         return { data: [firstCard, secondCard, thirdCard] }

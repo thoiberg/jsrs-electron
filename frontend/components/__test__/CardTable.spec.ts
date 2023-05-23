@@ -82,7 +82,7 @@ describe('CardTable', () => {
       const firstCardRow = wrapper.findAll('tr')[0]
       await firstCardRow.trigger('contextmenu')
 
-      expect(electronMock.showCardContextMenu).toBeCalled()
+      expect(electronMock.showCardContextMenu).toBeCalledWith('1')
     })
   })
 })

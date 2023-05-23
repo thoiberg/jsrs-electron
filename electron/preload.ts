@@ -9,6 +9,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   showCardContextMenu: (args: any) => ipcRenderer.send('show-card-context-menu', args),
 })
 
+// TODO connect it to Vue to automatically update the results
 ipcRenderer.on('card-deleted', (event, command) => {
   console.log('************** event', event)
   console.log('************** command', command)

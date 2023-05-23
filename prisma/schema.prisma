@@ -9,6 +9,7 @@ datasource db {
 
 model Card {
   id               String            @id @default(uuid())
+  status           String            @default("active")
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
   japaneseCardSide JapaneseCardSide?
@@ -16,12 +17,12 @@ model Card {
 }
 
 model JapaneseCardSide {
-  id             String           @id @default(uuid())
-  nextReviewAt   DateTime         @default(now())
-  card           Card             @relation(fields: [cardId], references: [id])
-  cardId         String           @unique
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
+  id              String           @id @default(uuid())
+  nextReviewAt    DateTime         @default(now())
+  card            Card             @relation(fields: [cardId], references: [id])
+  cardId          String           @unique
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
   japaneseAnswers JapaneseAnswer[]
 }
 
@@ -36,12 +37,12 @@ model JapaneseAnswer {
 }
 
 model EnglishCardSide {
-  id            String          @id @default(uuid())
-  nextReviewAt  DateTime        @default(now())
-  card          Card            @relation(fields: [cardId], references: [id])
-  cardId        String          @unique
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
+  id             String          @id @default(uuid())
+  nextReviewAt   DateTime        @default(now())
+  card           Card            @relation(fields: [cardId], references: [id])
+  cardId         String          @unique
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
   englishAnswers EnglishAnswer[]
 }
 

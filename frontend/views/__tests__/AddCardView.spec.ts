@@ -3,6 +3,7 @@ import { mount } from '@vue/test-utils'
 import AddCardView from '../AddCardView.vue'
 import { flushPromises } from '@vue/test-utils'
 import mockElectronApi from '../__mocks__/electronApi'
+import cardFactory from 'utils/factories/card'
 
 describe('AddCardView', () => {
   describe('when the english answer is missing', () => {
@@ -51,11 +52,7 @@ describe('AddCardView', () => {
   describe('when the data is valid', () => {
     it('calls the create card method', async () => {
       const electronApiMock = mockElectronApi()
-      const testCard = {
-        id: '1',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      }
+      const testCard = cardFactory.build()
       const createCardMock = vi.fn(() => {
         return { data: testCard }
       })
@@ -79,11 +76,7 @@ describe('AddCardView', () => {
     describe('and the create request succeeds', () => {
       it('shows the success method', async () => {
         const electronApiMock = mockElectronApi()
-        const testCard = {
-          id: '1',
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        }
+        const testCard = cardFactory.build()
         const createCardMock = vi.fn(() => {
           return { data: testCard }
         })

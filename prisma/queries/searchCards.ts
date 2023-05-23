@@ -3,6 +3,7 @@ import { prisma } from '../prisma'
 import type { RPCResponse, SearchCardsRequest } from 'electron/types'
 import errorProcessing from './utils/errorProcessing'
 import type { Prisma } from '@prisma/client'
+import { CardStatus } from '../card'
 
 export type CardWithEverything = Prisma.CardGetPayload<{
   include: {
@@ -40,6 +41,7 @@ export default async function searchCards(
     if (params?.query) {
       const data = await prisma.card.findMany({
         where: {
+          status: CardStatus.ACTIVE,
           OR: [
             {
               japaneseCardSide: {
@@ -84,6 +86,9 @@ export default async function searchCards(
       return { data }
     } else {
       const data = await prisma.card.findMany({
+        where: {
+          status: CardStatus.ACTIVE,
+        },
         include: includeAllCardRelationships,
       })
 

@@ -6,7 +6,12 @@
       <th>Kanji</th>
       <th>Created At</th>
     </thead>
-    <tr v-for="card in cards" :key="card.id" @click="$emit('cardSelected', card.id)">
+    <tr
+      v-for="card in cards"
+      :key="card.id"
+      @click="$emit('cardSelected', card.id)"
+      @contextmenu="showContextMenu(card.id)"
+    >
       <td>{{ card.englishCardSide?.englishAnswers.map((answer) => answer.answer).join(',') }}</td>
       <td>{{ card.japaneseCardSide?.japaneseAnswers.map((answer) => answer.kana).join(',') }}</td>
       <td>{{ card.japaneseCardSide?.japaneseAnswers.map((answer) => answer.kanji).join(',') }}</td>
@@ -24,4 +29,8 @@ defineProps<{
 defineEmits<{
   (e: 'cardSelected', id: string): void
 }>()
+
+function showContextMenu(cardId: string) {
+  window.electronAPI.showCardContextMenu(cardId)
+}
 </script>

@@ -4,6 +4,7 @@ import { mockDeep } from 'vitest-mock-extended'
 import CardTable from '../CardTable.vue'
 import type { CardWithEverything } from 'prisma/queries/searchCards'
 import cardFactory from 'utils/factories/card'
+import mockElectronApi from '@/views/__mocks__/electronApi'
 
 describe('CardTable', () => {
   interface LocalTestContext {
@@ -66,6 +67,22 @@ describe('CardTable', () => {
 
       expect(cardSelectedEvent).toHaveLength(1)
       expect(cardSelectedEvent![0]).toEqual(['1'])
+    })
+  })
+
+  describe('when a row is right clicked', () => {
+    it<LocalTestContext>('calls the showCardContextMenu api with the selected Card id', async ({
+      cards,
+    }) => {
+      const electronMock = mockElectronApi()
+      electronMock.showCardContextMenu.mockResolvedValue()
+
+      const wrapper = mount(CardTable, { props: { cards } })
+
+      const firstCardRow = wrapper.findAll('tr')[0]
+      await firstCardRow.trigger('contextmenu')
+
+      expect(electronMock.showCardContextMenu).toBeCalled()
     })
   })
 })

@@ -3,6 +3,7 @@ import { describe, expect, it, beforeEach, vi } from 'vitest'
 import searchCards, { includeAllCardRelationships } from '../searchCards'
 import { prisma } from '../../prisma'
 import resetDatabase from 'utils/testHelpers/resetDatabase'
+import { CardStatus } from 'prisma/card'
 
 describe('searchCards', () => {
   beforeEach(async () => {
@@ -17,14 +18,28 @@ describe('searchCards', () => {
 
       expect(response).toEqual({ data: [card] })
     })
+
+    describe('and the card is marked as deleted', () => {
+      it('does not include the card', async () => {
+        const catCard = await createCard('cat', 'ねこ', '猫')
+        await createCard('car', 'くるま', '車', CardStatus.DELETED)
+
+        const response = await searchCards({} as Event, { query: 'ca' })
+
+        expect(response.data).toHaveLength(1)
+        expect(response).toEqual({ data: [catCard] })
+      })
+    })
   })
 
   describe('when a query is not supplied', () => {
-    it('returns all cards', async () => {
+    it('returns all active cards', async () => {
       const catCard = await createCard('cat', 'ねこ', '猫')
+      await createCard('car', 'くるま', '車', CardStatus.DELETED)
       const dogCard = await createCard('dog', 'いぬ', '犬')
       const response = await searchCards({} as Event)
 
+      expect(response.data).toHaveLength(2)
       expect(response).toEqual({ data: [catCard, dogCard] })
     })
   })
@@ -51,9 +66,10 @@ describe('searchCards', () => {
   })
 })
 
-async function createCard(english: string, kana?: string, kanji?: string) {
+async function createCard(english: string, kana?: string, kanji?: string, status?: CardStatus) {
   return await prisma.card.create({
     data: {
+      status: status || CardStatus.ACTIVE,
       japaneseCardSide: {
         create: {
           japaneseAnswers: {

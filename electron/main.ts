@@ -1,9 +1,15 @@
-import electron, { app, ipcMain } from 'electron'
+import electron, { app, ipcMain, Menu } from 'electron'
 import process from 'process'
 import path from 'path'
 
 import { setupDb } from '../prisma/prisma'
-import { createCard, getReviewableCards, searchCards, updateCard } from '../prisma/queries'
+import {
+  createCard,
+  getReviewableCards,
+  searchCards,
+  updateCard,
+  deleteCard,
+} from '../prisma/queries'
 
 // Taken from the docs: https://www.electronforge.io/config/plugins/vite#hot-module-replacement-hmr
 declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string
@@ -42,6 +48,22 @@ function createWindow() {
   ipcMain.handle('get-reviewable-cards', getReviewableCards)
   ipcMain.handle('search-cards', searchCards)
   ipcMain.handle('update-card', updateCard)
+
+  ipcMain.on('show-card-context-menu', (event, cardId) => {
+    const template = [
+      {
+        label: 'Delete',
+        click: async () => {
+          const result = await deleteCard(event, cardId)
+
+          event.sender.send('card-deleted', { cardId, result })
+        },
+      },
+    ]
+
+    const menu = Menu.buildFromTemplate(template)
+    menu.popup({ window: BrowserWindow.fromWebContents(event.sender) || undefined })
+  })
 }
 
 app.whenReady().then(() => {

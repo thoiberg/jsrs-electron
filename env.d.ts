@@ -20,4 +20,5 @@ interface electronAPI {
   getReviewableCards: () => RPCResponse<Card[]>
   searchCards: (params?: SearchCardsRequest) => RPCResponse<CardWithEverything[]>
   updateCard: (params: UpdateCardRequest) => RPCResponse<CardWithEverything>
+  showCardContextMenu: (cardId: string) => void
 }

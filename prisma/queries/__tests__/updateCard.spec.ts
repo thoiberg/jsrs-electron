@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import updateCard from '../updateCard'
-import type { Event } from 'electron'
 import { prisma } from 'prisma/prisma'
 import resetDatabase from 'utils/testHelpers/resetDatabase'
 import { includeAllCardRelationships } from '../searchCards'

@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client'
+import resetDatabase from './testHelpers/resetDatabase'
 
 const prisma = new PrismaClient()
 
@@ -10,28 +11,30 @@ const cards = [
   { english: 'write', kana: 'かく' },
 ]
 
-cards.forEach(async (card) => {
-  await prisma.card.create({
-    data: {
-      japaneseCardSide: {
-        create: {
-          japaneseAnswers: {
-            create: {
-              kana: card.kana,
-              kanji: card.kanji,
+resetDatabase().then(() => {
+  cards.forEach(async (card) => {
+    await prisma.card.create({
+      data: {
+        japaneseCardSide: {
+          create: {
+            japaneseAnswers: {
+              create: {
+                kana: card.kana,
+                kanji: card.kanji,
+              },
+            },
+          },
+        },
+        englishCardSide: {
+          create: {
+            englishAnswers: {
+              create: {
+                answer: card.english,
+              },
             },
           },
         },
       },
-      englishCardSide: {
-        create: {
-          englishAnswers: {
-            create: {
-              answer: card.english,
-            },
-          },
-        },
-      },
-    },
+    })
   })
 })

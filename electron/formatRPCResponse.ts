@@ -1,5 +1,4 @@
 import type { Event } from 'electron'
-import errorProcessing from '../prisma/queries/utils/errorProcessing'
 import type { RPCResponse } from './types'
 
 export default function formatRPCResponse<T, U>(query: (arg0: U) => T) {
@@ -12,4 +11,25 @@ export default function formatRPCResponse<T, U>(query: (arg0: U) => T) {
       return errorProcessing(e)
     }
   }
+}
+
+export function errorProcessing(e: unknown) {
+  let error
+  if (e instanceof Error) {
+    error = e
+  } else if (hasMessage(e)) {
+    error = Error(e.message)
+  } else {
+    error = Error('something went wrong')
+  }
+
+  return { error }
+}
+
+function hasMessage(x: unknown): x is { message: string } {
+  if (x && typeof x === 'object' && 'message' in x) {
+    return true
+  }
+
+  return false
 }

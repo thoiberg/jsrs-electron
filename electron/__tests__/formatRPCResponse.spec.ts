@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import errorProcessing from '../errorProcessing'
+import { errorProcessing } from '../formatRPCResponse'
 
 describe('with an error object', () => {
   it('returns as error', async () => {

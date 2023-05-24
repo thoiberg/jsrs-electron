@@ -1,4 +1,4 @@
-import { describe, expect, it, vi, beforeEach } from 'vitest'
+import { describe, expect, it, beforeEach } from 'vitest'
 import getReviewableCards from '../getReviewableCards'
 import { prisma } from 'prisma/prisma'
 import { add, sub } from 'date-fns'
@@ -16,11 +16,10 @@ describe('getReviewableCards', () => {
         const future = add(new Date(), { weeks: 1 })
         const catCard = await createCard('cat', 'ねこ', '猫', past, future)
 
-        const response = await getReviewableCards()
+        const cards = await getReviewableCards()
 
-        expect(response.data).toBeDefined()
-        expect(response.data!.length).toEqual(1)
-        expect(response.data![0].id).toEqual(catCard.id)
+        expect(cards.length).toEqual(1)
+        expect(cards[0].id).toEqual(catCard.id)
       })
     })
 
@@ -30,11 +29,10 @@ describe('getReviewableCards', () => {
         const future = add(new Date(), { weeks: 1 })
         const catCard = await createCard('cat', 'ねこ', '猫', future, past)
 
-        const response = await getReviewableCards()
+        const cards = await getReviewableCards()
 
-        expect(response.data).toBeDefined()
-        expect(response.data!.length).toEqual(1)
-        expect(response.data![0].id).toEqual(catCard.id)
+        expect(cards.length).toEqual(1)
+        expect(cards[0].id).toEqual(catCard.id)
       })
     })
 
@@ -43,10 +41,9 @@ describe('getReviewableCards', () => {
         const past = sub(new Date(), { weeks: 1 })
         await createCard('cat', 'ねこ', '猫', past, past)
 
-        const response = await getReviewableCards()
+        const cards = await getReviewableCards()
 
-        expect(response.data).toBeDefined()
-        expect(response.data!.length).toEqual(1)
+        expect(cards.length).toEqual(1)
       })
     })
 
@@ -55,33 +52,9 @@ describe('getReviewableCards', () => {
         const future = add(new Date(), { weeks: 1 })
         await createCard('cat', 'ねこ', '猫', future, future)
 
-        const response = await getReviewableCards()
+        const cards = await getReviewableCards()
 
-        expect(response.data).toBeDefined()
-        expect(response.data!.length).toEqual(0)
-      })
-    })
-  })
-
-  describe('when the request fails', () => {
-    beforeEach(() => {
-      vi.doMock('../../prisma.ts')
-      vi.resetModules()
-    })
-    describe('with an error object', () => {
-      it('returns as error', async () => {
-        const { prisma: mockPrisma } = await import('../../__mocks__/prisma')
-        const { default: mockedGetReviewableCards } = await import('../getReviewableCards')
-
-        const returnedError = new Error('oh no')
-
-        mockPrisma.card.findMany.mockImplementation(() => {
-          throw returnedError
-        })
-
-        const response = await mockedGetReviewableCards()
-
-        expect(response.error).toEqual(returnedError)
+        expect(cards.length).toEqual(0)
       })
     })
   })

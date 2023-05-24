@@ -1,33 +1,23 @@
 import type {
   EnglishAnswerUpsertRequest,
   JapaneseAnswerUpsertRequest,
-  RPCResponse,
   UpdateCardRequest,
 } from 'electron/types'
 import { includeAllCardRelationships, type CardWithEverything } from './searchCards'
 import { prisma } from '../prisma'
-import errorProcessing from './utils/errorProcessing'
-import type { Event } from 'electron'
 
 export default async function updateCard(
-  event: Event,
   updateCardParams: UpdateCardRequest,
-): Promise<RPCResponse<CardWithEverything>> {
-  try {
-    const { japaneseAnswers, englishAnswers, cardId } = updateCardParams
+): Promise<CardWithEverything | null> {
+  const { japaneseAnswers, englishAnswers, cardId } = updateCardParams
 
-    englishAnswers && (await updateEnglishAnswers(englishAnswers))
-    japaneseAnswers && (await updateJapaneseAnswers(japaneseAnswers))
+  englishAnswers && (await updateEnglishAnswers(englishAnswers))
+  japaneseAnswers && (await updateJapaneseAnswers(japaneseAnswers))
 
-    const card = await prisma.card.findUnique({
-      where: { id: cardId },
-      include: includeAllCardRelationships,
-    })
-
-    return { data: card! }
-  } catch (e) {
-    return errorProcessing(e)
-  }
+  return await prisma.card.findUnique({
+    where: { id: cardId },
+    include: includeAllCardRelationships,
+  })
 }
 
 async function updateEnglishAnswers(englishAnswers: EnglishAnswerUpsertRequest[]) {

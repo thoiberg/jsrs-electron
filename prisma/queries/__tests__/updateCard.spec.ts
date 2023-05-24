@@ -1,13 +1,10 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import updateCard from '../updateCard'
-import type { Event } from 'electron'
 import { prisma } from 'prisma/prisma'
 import resetDatabase from 'utils/testHelpers/resetDatabase'
 import { includeAllCardRelationships } from '../searchCards'
 
 describe('updateCard', () => {
-  const electronEvent = {} as Event
-
   beforeEach(async () => {
     await resetDatabase()
   })
@@ -23,9 +20,9 @@ describe('updateCard', () => {
           japaneseAnswers: [{ japaneseAnswerId, kana: 'いぬ' }],
         }
 
-        const response = await updateCard(electronEvent, params)
+        const updatedCard = await updateCard(params)
 
-        expect(response).toHaveProperty('data')
+        expect(updatedCard).toBeDefined()
 
         const changedAnswer = await prisma.japaneseAnswer.findMany({
           where: {
@@ -47,8 +44,8 @@ describe('updateCard', () => {
           cardId: card.id,
           japaneseAnswers: [{ japaneseCardSideId, kana: 'ポチ' }],
         }
-        const response = await updateCard(electronEvent, params)
-        expect(response).toHaveProperty('data')
+        const updatedCard = await updateCard(params)
+        expect(updatedCard).toBeDefined()
 
         const answers = await prisma.japaneseAnswer.findMany({
           where: {
@@ -73,9 +70,9 @@ describe('updateCard', () => {
           englishAnswers: [{ englishAnswerId, answer: 'pupper' }],
         }
 
-        const response = await updateCard(electronEvent, params)
+        const updatedCard = await updateCard(params)
 
-        expect(response).toHaveProperty('data')
+        expect(updatedCard).toBeDefined()
 
         const changedAnswer = await prisma.englishAnswer.findMany({
           where: {
@@ -97,8 +94,8 @@ describe('updateCard', () => {
           cardId: card.id,
           englishAnswers: [{ englishCardSideId, answer: 'pupper' }],
         }
-        const response = await updateCard(electronEvent, params)
-        expect(response).toHaveProperty('data')
+        const updatedCard = await updateCard(params)
+        expect(updatedCard).toBeDefined()
 
         const answers = await prisma.englishAnswer.findMany({
           where: {

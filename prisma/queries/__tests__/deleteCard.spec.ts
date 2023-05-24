@@ -13,9 +13,9 @@ describe('deleteCard', () => {
   it('marks the card as deleted in the DB', async () => {
     const dogCard = await createCard('dog', 'いぬ', '犬')
 
-    const response = await deleteCard({} as Event, dogCard.id)
+    const response = await deleteCard(dogCard.id)
 
-    expect(response.data).toBeUndefined()
+    expect(response).toBeUndefined()
 
     const updatedCard = await prisma.card.findUnique({ where: { id: dogCard.id } })
 

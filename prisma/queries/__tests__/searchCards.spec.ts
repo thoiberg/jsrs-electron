@@ -1,4 +1,4 @@
-import { describe, expect, it, beforeEach, vi } from 'vitest'
+import { describe, expect, it, beforeEach } from 'vitest'
 
 import searchCards, { includeAllCardRelationships } from '../searchCards'
 import { prisma } from '../../prisma'
@@ -14,9 +14,9 @@ describe('searchCards', () => {
     it('searches for the card that matches the query', async () => {
       const card = await createCard('cat', 'ねこ', '猫')
 
-      const response = await searchCards({} as Event, { query: 'cat' })
+      const cards = await searchCards({ query: 'cat' })
 
-      expect(response).toEqual({ data: [card] })
+      expect(cards).toEqual([card])
     })
 
     describe('and the card is marked as deleted', () => {
@@ -24,10 +24,10 @@ describe('searchCards', () => {
         const catCard = await createCard('cat', 'ねこ', '猫')
         await createCard('car', 'くるま', '車', CardStatus.DELETED)
 
-        const response = await searchCards({} as Event, { query: 'ca' })
+        const cards = await searchCards({ query: 'ca' })
 
-        expect(response.data).toHaveLength(1)
-        expect(response).toEqual({ data: [catCard] })
+        expect(cards).toHaveLength(1)
+        expect(cards).toEqual([catCard])
       })
     })
   })
@@ -37,31 +37,10 @@ describe('searchCards', () => {
       const catCard = await createCard('cat', 'ねこ', '猫')
       await createCard('car', 'くるま', '車', CardStatus.DELETED)
       const dogCard = await createCard('dog', 'いぬ', '犬')
-      const response = await searchCards({} as Event)
+      const cards = await searchCards()
 
-      expect(response.data).toHaveLength(2)
-      expect(response).toEqual({ data: [catCard, dogCard] })
-    })
-  })
-
-  describe('when the request fails', () => {
-    beforeEach(() => {
-      vi.doMock('../../prisma.ts')
-      vi.resetModules()
-    })
-
-    it('returns the error', async () => {
-      const { prisma: mockPrisma } = await import('../../__mocks__/prisma')
-      const { default: mockedSearchCards } = await import('../searchCards')
-
-      const returnedError = new Error('oh no')
-      mockPrisma.card.findMany.mockImplementation(() => {
-        throw returnedError
-      })
-
-      const response = await mockedSearchCards({} as Event)
-
-      expect(response).toEqual({ error: returnedError })
+      expect(cards).toHaveLength(2)
+      expect(cards).toEqual([catCard, dogCard])
     })
   })
 })

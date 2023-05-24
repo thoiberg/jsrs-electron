@@ -12,6 +12,7 @@ import {
   updateCard,
   deleteCard,
 } from '../prisma/queries'
+import formatRPCResponse from './formatRPCResponse'
 
 // Taken from the docs: https://www.electronforge.io/config/plugins/vite#hot-module-replacement-hmr
 declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string
@@ -46,17 +47,17 @@ function createWindow() {
   // mainWindow.on('closed', () => {
   //   mainWindow = null
   // })
-  ipcMain.handle('create-card', createCard)
-  ipcMain.handle('get-reviewable-cards', getReviewableCards)
-  ipcMain.handle('search-cards', searchCards)
-  ipcMain.handle('update-card', updateCard)
+  ipcMain.handle('create-card', formatRPCResponse(createCard))
+  ipcMain.handle('get-reviewable-cards', formatRPCResponse(getReviewableCards))
+  ipcMain.handle('search-cards', formatRPCResponse(searchCards))
+  ipcMain.handle('update-card', formatRPCResponse(updateCard))
 
   ipcMain.on('show-card-context-menu', (event, cardId) => {
     const template = [
       {
         label: 'Delete',
         click: async () => {
-          const result = await deleteCard(event, cardId)
+          const result = await formatRPCResponse(deleteCard)(event, cardId)
 
           event.sender.send('card-deleted', { cardId, result })
         },

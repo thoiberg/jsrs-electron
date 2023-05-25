@@ -22,10 +22,8 @@ describe('HomeView', () => {
       const secondCard = cardFactory.build()
       const thirdCard = cardFactory.build()
 
-      const getReviewableCardsMock = vi.fn(() => {
-        return { data: [firstCard, secondCard, thirdCard] }
-      })
-      electronApi.getReviewableCards.mockImplementation(getReviewableCardsMock)
+      const getReviewableCardsMock = { data: [firstCard, secondCard, thirdCard] }
+      electronApi.getReviewableCards.mockResolvedValue(getReviewableCardsMock)
       const wrapper = mount(HomeView)
       await flushPromises()
 
@@ -35,10 +33,8 @@ describe('HomeView', () => {
 
   describe('when an error occurs when trying to retrieve the data', () => {
     it<LocalTestContext>('shows the error message', async ({ electronApi }) => {
-      const getReviewableCardsMock = vi.fn(() => {
-        return { error: new Error('oh no') }
-      })
-      electronApi.getReviewableCards.mockImplementation(getReviewableCardsMock)
+      const getReviewableCardsMock = { error: new Error('oh no') }
+      electronApi.getReviewableCards.mockResolvedValue(getReviewableCardsMock)
       const wrapper = mount(HomeView)
       await flushPromises()
 

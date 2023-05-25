@@ -1,9 +1,7 @@
-// create test.db if it doesn't exist
-// run prisma migrate reset
 const fs = require('fs')
 const { exec } = require('child_process')
 
-const dbPath = './test.db'
+const dbPath = `./${process.env.DATABASE_FILENAME}`
 
 const dbExists = fs.existsSync(dbPath)
 
@@ -11,10 +9,7 @@ if (!dbExists) {
   fs.closeSync(fs.openSync(dbPath, 'w'))
 }
 
-exec(
-  'DATABASE_URL=file:../test.db npx prisma migrate reset --force --skip-seed',
-  (stdout, stderr) => {
-    console.log('stdout:', stdout)
-    console.log('stderr:', stderr)
-  },
-)
+exec('npx prisma migrate reset --force --skip-seed', (_error, stdout, stderr) => {
+  console.log('stdout:', stdout)
+  console.log('stderr:', stderr)
+})

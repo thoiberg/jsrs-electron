@@ -2,7 +2,6 @@
 // "Error: PrismaClient is unable to be run in the browser."
 const { PrismaClient } = require('@prisma/client')
 import type { PrismaClient as ClientType } from '@prisma/client'
-// import { PrismaClient } from '@prisma/client'
 import path from 'path'
 import log from 'electron-log'
 import fs from 'fs'

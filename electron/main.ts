@@ -7,6 +7,7 @@ import fs from 'fs'
 import { setupDb } from 'prisma/prisma'
 import { createCard, getReviewableCards, searchCards, updateCard, deleteCard } from 'prisma/queries'
 import formatRPCResponse from './formatRPCResponse'
+import { ElectronApiChannel } from './types'
 
 // Taken from the docs: https://www.electronforge.io/config/plugins/vite#hot-module-replacement-hmr
 declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string
@@ -41,10 +42,10 @@ function createWindow() {
   // mainWindow.on('closed', () => {
   //   mainWindow = null
   // })
-  ipcMain.handle('create-card', formatRPCResponse(createCard))
-  ipcMain.handle('get-reviewable-cards', formatRPCResponse(getReviewableCards))
-  ipcMain.handle('search-cards', formatRPCResponse(searchCards))
-  ipcMain.handle('update-card', formatRPCResponse(updateCard))
+  ipcMain.handle(ElectronApiChannel.CreateCard, formatRPCResponse(createCard))
+  ipcMain.handle(ElectronApiChannel.GetReviewableCards, formatRPCResponse(getReviewableCards))
+  ipcMain.handle(ElectronApiChannel.SearchCards, formatRPCResponse(searchCards))
+  ipcMain.handle(ElectronApiChannel.UpdateCard, formatRPCResponse(updateCard))
 
   ipcMain.on('show-card-context-menu', (event, cardId: string) => {
     const template = [
@@ -53,7 +54,7 @@ function createWindow() {
         click: async () => {
           const result = await formatRPCResponse(deleteCard)(event, cardId)
 
-          event.sender.send('card-deleted', { cardId, result })
+          event.sender.send(ElectronApiChannel.CardDeleted, { cardId, result })
         },
       },
     ]

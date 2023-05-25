@@ -1,13 +1,16 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import type { CreateCardRequest, SearchCardsRequest, UpdateCardRequest } from './types'
+import { ElectronApiChannel } from './types'
 import type { electronAPI } from 'env'
 
 const electronApi: electronAPI = {
-  createCard: (args: CreateCardRequest) => ipcRenderer.invoke('create-card', args),
-  getReviewableCards: () => ipcRenderer.invoke('get-reviewable-cards'),
-  searchCards: (args?: SearchCardsRequest) => ipcRenderer.invoke('search-cards', args),
-  updateCard: (args: UpdateCardRequest) => ipcRenderer.invoke('update-card', args),
-  showCardContextMenu: (cardId: string) => ipcRenderer.send('show-card-context-menu', cardId),
+  createCard: (args: CreateCardRequest) => ipcRenderer.invoke(ElectronApiChannel.CreateCard, args),
+  getReviewableCards: () => ipcRenderer.invoke(ElectronApiChannel.GetReviewableCards),
+  searchCards: (args?: SearchCardsRequest) =>
+    ipcRenderer.invoke(ElectronApiChannel.SearchCards, args),
+  updateCard: (args: UpdateCardRequest) => ipcRenderer.invoke(ElectronApiChannel.UpdateCard, args),
+  showCardContextMenu: (cardId: string) =>
+    ipcRenderer.send(ElectronApiChannel.ShowCardContextMenu, cardId),
 }
 
 contextBridge.exposeInMainWorld('electronAPI', electronApi)

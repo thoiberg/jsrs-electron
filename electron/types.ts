@@ -1,3 +1,12 @@
+export enum ElectronApiChannel {
+  CreateCard = 'create-card',
+  GetReviewableCards = 'get-reviewable-cards',
+  SearchCards = 'search-cards',
+  UpdateCard = 'update-card',
+  ShowCardContextMenu = 'show-card-context-menu',
+  CardDeleted = 'card-deleted',
+}
+
 export interface CreateCardRequest {
   english: string
   kanji: string

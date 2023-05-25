@@ -5,13 +5,7 @@ import os from 'os'
 import fs from 'fs'
 
 import { setupDb } from 'prisma/prisma'
-import {
-  createCard,
-  getReviewableCards,
-  searchCards,
-  updateCard,
-  deleteCard,
-} from '../prisma/queries'
+import { createCard, getReviewableCards, searchCards, updateCard, deleteCard } from 'prisma/queries'
 import formatRPCResponse from './formatRPCResponse'
 
 // Taken from the docs: https://www.electronforge.io/config/plugins/vite#hot-module-replacement-hmr

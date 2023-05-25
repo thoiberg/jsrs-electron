@@ -4,7 +4,7 @@ import path from 'path'
 import os from 'os'
 import fs from 'fs'
 
-import { setupDb } from '../prisma/prisma'
+import { setupDb } from 'prisma/prisma'
 import {
   createCard,
   getReviewableCards,

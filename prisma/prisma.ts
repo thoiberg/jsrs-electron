@@ -2,12 +2,12 @@
 // "Error: PrismaClient is unable to be run in the browser."
 const { PrismaClient } = require('@prisma/client')
 import type { PrismaClient as ClientType } from '@prisma/client'
-// import { PrismaClient } from '@prisma/client'
 import path from 'path'
 import log from 'electron-log'
 import fs from 'fs'
 import { fork } from 'child_process'
 import { app } from 'electron'
+import querystring from 'querystring'
 
 const dbUrl = getDbUrl()
 
@@ -69,13 +69,16 @@ export function setupDb() {
 function getDbUrl() {
   const isDev = process.env.NODE_ENV === 'development'
   const isTest = process.env.NODE_ENV === 'test'
+  let filePath
 
-  if (isDev) {
-    return process.env.DATABASE_URL
-  } else if (isTest) {
-    return 'file:../test.db?connection_limit=1'
+  if (isDev || isTest) {
+    filePath = process.env.DATABASE_URL
   } else {
     const dbPath = path.join(app.getPath('userData'), 'app.db')
-    return 'file:' + dbPath
+    filePath = 'file:' + dbPath
   }
+
+  const params = querystring.stringify({ connection_limit: 1 })
+
+  return `${filePath}?${params}`
 }

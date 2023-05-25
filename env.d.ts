@@ -7,7 +7,7 @@ import type {
   SearchCardsRequest,
   UpdateCardRequest,
 } from 'electron/types'
-import type { CardWithEverything } from 'prisma/queries/searchCards'
+import type { CardWithEverything } from 'prisma/types'
 
 export declare global {
   interface Window {
@@ -16,9 +16,9 @@ export declare global {
 }
 
 interface electronAPI {
-  createCard: (params: CreateCardRequest) => RPCResponse<Card>
-  getReviewableCards: () => RPCResponse<Card[]>
-  searchCards: (params?: SearchCardsRequest) => RPCResponse<CardWithEverything[]>
-  updateCard: (params: UpdateCardRequest) => RPCResponse<CardWithEverything>
+  createCard: (params: CreateCardRequest) => Promise<RPCResponse<Card>>
+  getReviewableCards: () => Promise<RPCResponse<Card[]>>
+  searchCards: (params?: SearchCardsRequest) => Promise<RPCResponse<CardWithEverything[]>>
+  updateCard: (params: UpdateCardRequest) => Promise<RPCResponse<CardWithEverything>>
   showCardContextMenu: (cardId: string) => void
 }

@@ -53,9 +53,8 @@ describe('AddCardView', () => {
     it('calls the create card method', async () => {
       const electronApiMock = mockElectronApi()
       const testCard = cardFactory.build()
-      const createCardMock = vi.fn(() => {
-        return { data: testCard }
-      })
+      const createCardMock = vi.fn().mockResolvedValue({ data: testCard })
+
       electronApiMock.createCard.mockImplementation(createCardMock)
 
       const wrapper = mount(AddCardView)
@@ -77,9 +76,7 @@ describe('AddCardView', () => {
       it('shows the success method', async () => {
         const electronApiMock = mockElectronApi()
         const testCard = cardFactory.build()
-        const createCardMock = vi.fn(() => {
-          return { data: testCard }
-        })
+        const createCardMock = vi.fn().mockResolvedValue({ data: testCard })
         electronApiMock.createCard.mockImplementation(createCardMock)
 
         const wrapper = mount(AddCardView)
@@ -98,9 +95,7 @@ describe('AddCardView', () => {
     describe('and the create request fails', () => {
       it('shows the error message', async () => {
         const electronApiMock = mockElectronApi()
-        const createCardMock = vi.fn(() => {
-          return { error: new Error('oh no') }
-        })
+        const createCardMock = vi.fn().mockResolvedValue({ error: new Error('oh no') })
         electronApiMock.createCard.mockImplementation(createCardMock)
 
         const wrapper = mount(AddCardView)

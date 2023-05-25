@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import type { CardWithEverything } from 'prisma/queries/searchCards'
+import type { CardWithEverything } from 'prisma/types'
 import { onMounted, ref, type Ref } from 'vue'
 import CardTable from '@/components/CardTable.vue'
 import CardForm, { type SubmitParams } from '@/components/CardForm.vue'

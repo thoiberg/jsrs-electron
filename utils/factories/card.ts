@@ -1,5 +1,5 @@
 import { Factory } from 'fishery'
-import type { CardWithEverything } from '../../prisma/queries/searchCards'
+import type { CardWithEverything } from 'prisma/types'
 import japaneseCardSideFactory from './japaneseCardSide'
 import englishCardSideFactory from './englishCardSide'
 import { CardStatus } from '../../prisma/card'

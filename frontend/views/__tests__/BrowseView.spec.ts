@@ -3,7 +3,7 @@ import { flushPromises, mount } from '@vue/test-utils'
 import BrowseCardView from '../BrowseCardView.vue'
 import mockElectronApi from '../__mocks__/electronApi'
 import CardTable from '@/components/CardTable.vue'
-import type { CardWithEverything } from 'prisma/queries/searchCards'
+import type { CardWithEverything } from 'prisma/types'
 import CardForm from '@/components/CardForm.vue'
 import cardFactory from 'utils/factories/card'
 import { ref } from 'vue'
@@ -13,9 +13,7 @@ describe('BrowseView', () => {
     it('retrieves all the cards', async () => {
       const electronApiMock = mockElectronApi()
 
-      electronApiMock.searchCards.mockImplementation(() => {
-        return { data: [] }
-      })
+      electronApiMock.searchCards.mockResolvedValue({ data: [] })
 
       mount(BrowseCardView)
       await flushPromises()
@@ -29,9 +27,7 @@ describe('BrowseView', () => {
 
     const cards: CardWithEverything[] = []
 
-    electronApiMock.searchCards.mockImplementation(() => {
-      return { data: cards }
-    })
+    electronApiMock.searchCards.mockResolvedValue({ data: cards })
 
     const wrapper = mount(BrowseCardView)
     await flushPromises()
@@ -46,9 +42,7 @@ describe('BrowseView', () => {
       it('retrieves all the cards', async () => {
         const electronApiMock = mockElectronApi()
 
-        electronApiMock.searchCards.mockImplementation(() => {
-          return { data: [] }
-        })
+        electronApiMock.searchCards.mockResolvedValue({ data: [] })
 
         const wrapper = mount(BrowseCardView)
         await flushPromises()
@@ -64,9 +58,7 @@ describe('BrowseView', () => {
       it('searches for cards matching the query', async () => {
         const electronApiMock = mockElectronApi()
 
-        electronApiMock.searchCards.mockImplementation(() => {
-          return { data: [] }
-        })
+        electronApiMock.searchCards.mockResolvedValue({ data: [] })
 
         const wrapper = mount(BrowseCardView)
         await flushPromises()
@@ -82,9 +74,7 @@ describe('BrowseView', () => {
     it('shows the error', async () => {
       const electronApiMock = mockElectronApi()
 
-      electronApiMock.searchCards.mockImplementation(() => {
-        return { error: new Error('oh no') }
-      })
+      electronApiMock.searchCards.mockResolvedValue({ error: new Error('oh no') })
 
       const wrapper = mount(BrowseCardView)
       await flushPromises()
@@ -110,9 +100,7 @@ describe('BrowseView', () => {
         id: '12',
       })
 
-      electronApiMock.searchCards.mockImplementation(() => {
-        return { data: [card] }
-      })
+      electronApiMock.searchCards.mockResolvedValue({ data: [card] })
 
       const wrapper = mount(BrowseCardView)
       await flushPromises()
@@ -136,9 +124,7 @@ describe('BrowseView', () => {
       const card = cardFactory.build({
         id: '12',
       })
-      electronApiMock.searchCards.mockImplementation(() => {
-        return { data: [card] }
-      })
+      electronApiMock.searchCards.mockResolvedValue({ data: [card] })
       electronApiMock.updateCard.mockResolvedValue({ data: card })
 
       const wrapper = mount(BrowseCardView)

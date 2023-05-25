@@ -52,7 +52,7 @@ function createWindow() {
   ipcMain.handle('search-cards', formatRPCResponse(searchCards))
   ipcMain.handle('update-card', formatRPCResponse(updateCard))
 
-  ipcMain.on('show-card-context-menu', (event, cardId) => {
+  ipcMain.on('show-card-context-menu', (event, cardId: string) => {
     const template = [
       {
         label: 'Delete',

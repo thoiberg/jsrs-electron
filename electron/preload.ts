@@ -6,7 +6,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getReviewableCards: () => ipcRenderer.invoke('get-reviewable-cards'),
   searchCards: (args: SearchCardsRequest) => ipcRenderer.invoke('search-cards', args),
   updateCard: (args: UpdateCardRequest) => ipcRenderer.invoke('update-card', args),
-  showCardContextMenu: (args: any) => ipcRenderer.send('show-card-context-menu', args),
+  showCardContextMenu: (cardId: string) => ipcRenderer.send('show-card-context-menu', cardId),
 })
 
 // TODO connect it to Vue to automatically update the results

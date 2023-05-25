@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
 import formatDateTime from '@/utils/formatDateTime'
-import type { CardWithEverything } from 'prisma/queries/searchCards'
+import type { CardWithEverything } from 'prisma/types'
 defineProps<{
   cards: CardWithEverything[]
 }>()

@@ -7,7 +7,7 @@ import type {
   SearchCardsRequest,
   UpdateCardRequest,
 } from 'electron/types'
-import type { CardWithEverything } from 'prisma/queries/searchCards'
+import type { CardWithEverything } from 'prisma/types'
 
 export declare global {
   interface Window {

@@ -1,22 +1,7 @@
 import { prisma } from '../prisma'
 import type { SearchCardsRequest } from 'electron/types'
-import type { Prisma } from '@prisma/client'
 import { CardStatus } from '../card'
-
-export type CardWithEverything = Prisma.CardGetPayload<{
-  include: {
-    englishCardSide: {
-      include: {
-        englishAnswers: true
-      }
-    }
-    japaneseCardSide: {
-      include: {
-        japaneseAnswers: true
-      }
-    }
-  }
-}>
+import type { CardWithEverything } from '../types'
 
 export const includeAllCardRelationships = {
   englishCardSide: {

@@ -3,7 +3,8 @@ import type {
   JapaneseAnswerUpsertRequest,
   UpdateCardRequest,
 } from 'electron/types'
-import { includeAllCardRelationships, type CardWithEverything } from './searchCards'
+import { includeAllCardRelationships } from './searchCards'
+import type { CardWithEverything } from '../types'
 import { prisma } from '../prisma'
 
 export default async function updateCard(

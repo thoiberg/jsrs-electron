@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import type { CardWithEverything } from 'prisma/queries/searchCards'
+import type { CardWithEverything } from 'prisma/types'
 import { ref, watch, type Ref } from 'vue'
 
 export type SubmitParams = {

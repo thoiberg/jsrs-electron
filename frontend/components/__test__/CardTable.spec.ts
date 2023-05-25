@@ -2,7 +2,7 @@ import { mount } from '@vue/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { mockDeep } from 'vitest-mock-extended'
 import CardTable from '../CardTable.vue'
-import type { CardWithEverything } from 'prisma/queries/searchCards'
+import type { CardWithEverything } from 'prisma/types'
 import cardFactory from 'utils/factories/card'
 import mockElectronApi from '@/views/__mocks__/electronApi'
 

@@ -29,19 +29,16 @@ test.beforeAll(async () => {
   })
 })
 
-test.afterAll(async () => {
-  await electronApp.close()
-})
-
 test('visits the app root url', async () => {
   const page = await electronApp.firstWindow()
 
-  // TODO: find a better way to reliably wait until the page is loaded
-  setTimeout(async () => {
+  page.on('domcontentloaded', async () => {
     await page.click('text=Home')
 
     await expect(page.locator('main')).toContainText('Reviewable Cards: 0')
 
     await page.click('text=Add Card')
-  }, 1000)
+
+    await electronApp.close()
+  })
 })

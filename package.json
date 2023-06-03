@@ -11,6 +11,8 @@
     "test:unit": "dotenv -e .env.test -- vitest",
     "pretest:e2e": "npm run package && dotenv -e .env.test -- node testSetup.js ",
     "test:e2e": "dotenv -e .env.test -- playwright test",
+    "pretest:e2e:dev": "npm run package && dotenv -e .env.test -- node testSetup.js ",
+    "test:e2e:dev": "dotenv -e .env.test -- playwright test --ui",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore --max-warnings=0",

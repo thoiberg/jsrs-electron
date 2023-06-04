@@ -44,6 +44,10 @@ jobs:
           cache: 'npm'
       - run: npm install
       - run: npm run test:e2e
+      - uses: actions/upload-artifact@v3
+        with:
+          name: e2e-output
+          path: test-results/
   lint:
     runs-on: ubuntu-latest
     steps:
